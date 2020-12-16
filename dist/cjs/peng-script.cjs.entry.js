@@ -1,4 +1,8 @@
-import { r as registerInstance, e as createEvent, h, f as Host, g as getElement } from './index-78471a62.js';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+const index = require('./index-44bac54e.js');
 
 const ERROR_MESSAGE = {
   1: 'Script triggered but missing src',
@@ -27,12 +31,17 @@ for (const key in STATUS)
 const globalStatusCode = {};
 const PengScript = class {
   constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.pengscript = createEvent(this, "pengscript", 7);
+    index.registerInstance(this, hostRef);
+    this.pengscript = index.createEvent(this, "pengscript", 7);
+    /** Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. */
     this.isOnce = false;
+    /** By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead. */
     this.isGlobal = false;
+    /** Specify when the script will be added to the page. Default is to lazy load. */
     this.trigger = 'lazy';
+    /** Delay n milliseconds after being triggered. */
     this.wait = 0;
+    /** Fine tune when an iframe will be shown. Defaults to wait until is has loaded. */
     this.showWhen = 'LOADED';
     /** To expose status message for debugging etc: */
     this.statusMessage = STATUS_NAME[STATUS.IDLE];
@@ -66,9 +75,6 @@ const PengScript = class {
           // this.status < STATUS.LOADING &&
           !(this.isOnce && isScriptOnPage(src))) {
           createElement(isIframe ? 'iframe' : 'script', Object.assign({ src, onload: onLoad }, parseJSON(props)), document.head);
-        }
-        else {
-          // The render method will render the script or iframe because status >= TRIGGERED
         }
         // Update status:
         this.status = globalStatusCode[src] = STATUS.LOADING;
@@ -177,7 +183,7 @@ const PengScript = class {
     if (!isGlobal && status > STATUS.WAITING && !(isOnce && isScriptOnPage(src))) {
       const Tag = isIframe ? 'iframe' : 'script';
       const scriptProps = Object.assign({ src, onLoad }, parseJSON(props));
-      script = h(Tag, Object.assign({}, scriptProps));
+      script = index.h(Tag, Object.assign({}, scriptProps));
     }
     // Bind a click handler to the host element if necessary:
     const hostProps = {
@@ -185,9 +191,9 @@ const PengScript = class {
     };
     // Decide whether to show either the placeholder or the result of the script:
     const hidePlaceholder = status >= showWhenStatus && status !== STATUS.TIMEOUT;
-    return (h(Host, Object.assign({}, hostProps), h("div", { "data-script-status": statusMessage, class: "peng-placeholder-content", hidden: hidePlaceholder }, h("slot", null)), h("div", { "data-script-status": statusMessage, class: "peng-scripted-content", hidden: !hidePlaceholder }, script)));
+    return (index.h(index.Host, Object.assign({}, hostProps), index.h("div", { "data-script-status": statusMessage, class: "peng-placeholder-content", hidden: hidePlaceholder }, index.h("slot", null)), index.h("div", { "data-script-status": statusMessage, class: "peng-scripted-content", hidden: !hidePlaceholder }, script)));
   }
-  get host() { return getElement(this); }
+  get host() { return index.getElement(this); }
   static get watchers() { return {
     "error": ["onError"],
     "status": ["onStatus"]
@@ -266,4 +272,4 @@ async function awaitScriptReady(test, timeout, interval = 200) {
   });
 }
 
-export { PengScript as peng_script };
+exports.peng_script = PengScript;

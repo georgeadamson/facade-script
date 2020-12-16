@@ -8,6 +8,8 @@ Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-w
 
 ### To lazyload a script only when the user scrolls down to it:
 
+Just use this tag instead of a regular `<script>` tag:
+
 ```js
 <facade-script src="https://path/to/a/script.js"></facade-script>
 ```
@@ -24,8 +26,61 @@ Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-w
 ### To show a placeholder until a YouTube video is lazyloaded:
 
 ```js
+<facade-script iframe src="https://www.youtube.com/watch?v=GTUruS-lnEo">
+  <p>Loading...</p>
+</facade-script>
+```
+
+## Advanced use cases
+
+### `once` (boolean)
+
+Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
+
+```js
+<facade-script once src="https://path/to/a/script.js"></facade-script>
+```
+
+---
+
+### `global` (boolean)
+
+By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
+
+```js
+<facade-script once src="https://path/to/a/script.js"></facade-script>
+```
+
+---
+
+### `trigger` ("now" | "lazy" | "click")
+
+When should the script be added to the page?
+
+- `now` - Immediately. Much like a standard script.
+- `lazy` - When this element is scrolled into view.
+- `click` - When this element is clicked.
+
+```js
 <facade-script
   iframe
+  trigger="click"
+  src="https://www.youtube.com/watch?v=GTUruS-lnEo"
+>
+  <button>Play video</button>
+</facade-script>
+```
+
+---
+
+### `wait="..."` (milliseconds)
+
+Delay n milliseconds after being triggered.
+
+```js
+<facade-script
+  iframe
+  wait="2000"
   src="https://www.youtube.com/watch?v=GTUruS-lnEo"
 ></facade-script>
 ```

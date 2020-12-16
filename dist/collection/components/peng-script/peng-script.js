@@ -1,5 +1,4 @@
-import { r as registerInstance, e as createEvent, h, f as Host, g as getElement } from './index-78471a62.js';
-
+import { Component, Prop, State, Watch, Host, Element, Event, h, } from '@stencil/core';
 const ERROR_MESSAGE = {
   1: 'Script triggered but missing src',
 };
@@ -25,14 +24,17 @@ for (const key in STATUS)
 // When a script must only ever be loaded isOnce, we use this to track whether it's on the page already.
 // Note that it is a map so we can track different script src urls.
 const globalStatusCode = {};
-const PengScript = class {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.pengscript = createEvent(this, "pengscript", 7);
+export class PengScript {
+  constructor() {
+    /** Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. */
     this.isOnce = false;
+    /** By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead. */
     this.isGlobal = false;
+    /** Specify when the script will be added to the page. Default is to lazy load. */
     this.trigger = 'lazy';
+    /** Delay n milliseconds after being triggered. */
     this.wait = 0;
+    /** Fine tune when an iframe will be shown. Defaults to wait until is has loaded. */
     this.showWhen = 'LOADED';
     /** To expose status message for debugging etc: */
     this.statusMessage = STATUS_NAME[STATUS.IDLE];
@@ -185,14 +187,272 @@ const PengScript = class {
     };
     // Decide whether to show either the placeholder or the result of the script:
     const hidePlaceholder = status >= showWhenStatus && status !== STATUS.TIMEOUT;
-    return (h(Host, Object.assign({}, hostProps), h("div", { "data-script-status": statusMessage, class: "peng-placeholder-content", hidden: hidePlaceholder }, h("slot", null)), h("div", { "data-script-status": statusMessage, class: "peng-scripted-content", hidden: !hidePlaceholder }, script)));
+    return (h(Host, Object.assign({}, hostProps),
+      h("div", { "data-script-status": statusMessage, class: "peng-placeholder-content", hidden: hidePlaceholder },
+        h("slot", null)),
+      h("div", { "data-script-status": statusMessage, class: "peng-scripted-content", hidden: !hidePlaceholder }, script)));
   }
-  get host() { return getElement(this); }
-  static get watchers() { return {
-    "error": ["onError"],
-    "status": ["onStatus"]
+  static get is() { return "peng-script"; }
+  static get encapsulation() { return "shadow"; }
+  static get properties() { return {
+    "srcProd": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "src",
+      "reflect": false
+    },
+    "isIframe": {
+      "type": "boolean",
+      "mutable": false,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "By default a script tag will be rendered. Use this option to render an iframe instead."
+      },
+      "attribute": "iframe",
+      "reflect": false
+    },
+    "isOnce": {
+      "type": "boolean",
+      "mutable": false,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag."
+      },
+      "attribute": "once",
+      "reflect": false,
+      "defaultValue": "false"
+    },
+    "isGlobal": {
+      "type": "boolean",
+      "mutable": false,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead."
+      },
+      "attribute": "global",
+      "reflect": false,
+      "defaultValue": "false"
+    },
+    "trigger": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "'now' | 'lazy' | 'click' | Function",
+        "resolved": "\"click\" | \"lazy\" | \"now\" | Function",
+        "references": {
+          "Function": {
+            "location": "global"
+          }
+        }
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "Specify when the script will be added to the page. Default is to lazy load."
+      },
+      "attribute": "trigger",
+      "reflect": false,
+      "defaultValue": "'lazy'"
+    },
+    "wait": {
+      "type": "number",
+      "mutable": false,
+      "complexType": {
+        "original": "number",
+        "resolved": "number",
+        "references": {}
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "Delay n milliseconds after being triggered."
+      },
+      "attribute": "wait",
+      "reflect": false,
+      "defaultValue": "0"
+    },
+    "props": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string | object",
+        "resolved": "object | string",
+        "references": {}
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "Optional props to set on the script or iframe. Map of key:values supplied as object or JSON."
+      },
+      "attribute": "props",
+      "reflect": false
+    },
+    "showWhen": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "PengScriptStatusName",
+        "resolved": "\"IDLE\" | \"LOADED\" | \"LOADING\" | \"READY\" | \"TIMEOUT\" | \"TRIGGERED\" | \"TRIGGERED_BUT_NO_SRC\" | \"WAITING\"",
+        "references": {
+          "PengScriptStatusName": {
+            "location": "local"
+          }
+        }
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "Fine tune when an iframe will be shown. Defaults to wait until is has loaded."
+      },
+      "attribute": "show-when",
+      "reflect": false,
+      "defaultValue": "'LOADED'"
+    },
+    "timeout": {
+      "type": "number",
+      "mutable": false,
+      "complexType": {
+        "original": "number",
+        "resolved": "number",
+        "references": {}
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "Milliseconds to wait before discarding a slow loading script or iframe."
+      },
+      "attribute": "timeout",
+      "reflect": false
+    },
+    "isReady": {
+      "type": "unknown",
+      "mutable": false,
+      "complexType": {
+        "original": "Function",
+        "resolved": "Function",
+        "references": {
+          "Function": {
+            "location": "global"
+          }
+        }
+      },
+      "required": false,
+      "optional": true,
+      "docs": {
+        "tags": [],
+        "text": "A callback function will triggered when the script or iframe has loaded and run."
+      }
+    },
+    "errorMessage": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": "To expose error message for debugging etc:"
+      },
+      "attribute": "error",
+      "reflect": true
+    },
+    "statusMessage": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "PengScriptStatusName",
+        "resolved": "\"IDLE\" | \"LOADED\" | \"LOADING\" | \"READY\" | \"TIMEOUT\" | \"TRIGGERED\" | \"TRIGGERED_BUT_NO_SRC\" | \"WAITING\"",
+        "references": {
+          "PengScriptStatusName": {
+            "location": "local"
+          }
+        }
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": "To expose status message for debugging etc:"
+      },
+      "attribute": "status",
+      "reflect": true,
+      "defaultValue": "STATUS_NAME[STATUS.IDLE]"
+    }
   }; }
-};
+  static get states() { return {
+    "status": {},
+    "error": {}
+  }; }
+  static get events() { return [{
+      "method": "pengscript",
+      "name": "pengscript",
+      "bubbles": true,
+      "cancelable": true,
+      "composed": true,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "complexType": {
+        "original": "PengScriptEvent",
+        "resolved": "{ status: PengScriptStatusName; code: PengScriptStatusCode; error: 1; errorMessage: string; src: string; id?: string; }",
+        "references": {
+          "PengScriptEvent": {
+            "location": "local"
+          }
+        }
+      }
+    }]; }
+  static get elementRef() { return "host"; }
+  static get watchers() { return [{
+      "propName": "error",
+      "methodName": "onError"
+    }, {
+      "propName": "status",
+      "methodName": "onStatus"
+    }]; }
+}
 // Return true if script is already present or loading on page:
 function isScriptOnPage(src) {
   return statusOfGlobalScript(src) >= STATUS.TRIGGERED ||
@@ -265,5 +525,3 @@ async function awaitScriptReady(test, timeout, interval = 200) {
     }
   });
 }
-
-export { PengScript as peng_script };
