@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Stencil Component Starter</title>
+
+    <script type="module" src="/build/peng-script.esm.js"></script>
+    <script nomodule src="/build/peng-script.js"></script>
+  </head>
+  <body>
+    <div style="height: 50vh"></div>
+    <peng-script
+      src="https://www.youtube.com/embed/9TPG80boMjY"
+      iframe
+      wait="5000"
+      show-when="loading"
+      timeout="5000"
+      >Placeholder for iframe</peng-script
+    >
+
+    <peng-script
+      src="sample-script.js"
+      wait="2000"
+      show-when="loading"
+      global
+    >Placeholder for script</peng-script>
+
+        <peng-script
+          src="sample-script.js"
+          wait="2000"
+          show-when="loading"
+          global
+        >Placeholder for script</peng-script>
+  </body>
+</html>
