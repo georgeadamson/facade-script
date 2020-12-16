@@ -1,7 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { PengScript } from '../peng-script';
+import { PengScript } from '../facade-script';
 
-describe('peng-script for script added to <head>', () => {
+describe('facade-script for script added to <head>', () => {
   beforeAll(() => {
     // Mock IntersectionObserver because it is not available in test environment
     const mockIntersectionObserver = jest.fn();
@@ -15,21 +15,21 @@ describe('peng-script for script added to <head>', () => {
     global.IntersectionObserver = mockIntersectionObserver;
   });
 
-  afterEach(() => {    
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('should render script in <head> when head=true', async () => {
     const page = await newSpecPage({
       components: [PengScript],
-      html: `<peng-script src="https://foo/bar.js" trigger="now" head></peng-script>`,
+      html: `<facade-script src="https://foo/bar.js" trigger="now" head></facade-script>`,
     });
 
     expect(page.root).toEqualHtml(`
-      <peng-script src="https://foo/bar.js" trigger="now" head status="loading">
-        <div class="peng-placeholder-content" data-script-status="loading"></div>
-        <div class="peng-scripted-content" data-script-status="loading" hidden></div>
-      </peng-script>
+      <facade-script src="https://foo/bar.js" trigger="now" head status="loading">
+        <div class="facade-placeholder-content" data-script-status="loading"></div>
+        <div class="facade-scripted-content" data-script-status="loading" hidden></div>
+      </facade-script>
     `);
 
     // Script should be in the <head> this time:
@@ -42,19 +42,19 @@ describe('peng-script for script added to <head>', () => {
     const page = await newSpecPage({
       components: [PengScript],
       html: `
-        <peng-script src="https://foo/bar.js" trigger="now" head></peng-script>
-        <peng-script src="https://foo/BAR2.js" trigger="now" head></peng-script>`,
+        <facade-script src="https://foo/bar.js" trigger="now" head></facade-script>
+        <facade-script src="https://foo/BAR2.js" trigger="now" head></facade-script>`,
     });
 
     expect(page.body).toEqualHtml(`
-      <peng-script src="https://foo/bar.js" trigger="now" head status="loading">
-        <div class="peng-placeholder-content" data-script-status="loading"></div>
-        <div class="peng-scripted-content" data-script-status="loading" hidden></div>
-      </peng-script>
-      <peng-script src="https://foo/BAR2.js" trigger="now" head status="loading">
-        <div class="peng-placeholder-content" data-script-status="loading"></div>
-        <div class="peng-scripted-content" data-script-status="loading" hidden></div>
-      </peng-script>
+      <facade-script src="https://foo/bar.js" trigger="now" head status="loading">
+        <div class="facade-placeholder-content" data-script-status="loading"></div>
+        <div class="facade-scripted-content" data-script-status="loading" hidden></div>
+      </facade-script>
+      <facade-script src="https://foo/BAR2.js" trigger="now" head status="loading">
+        <div class="facade-placeholder-content" data-script-status="loading"></div>
+        <div class="facade-scripted-content" data-script-status="loading" hidden></div>
+      </facade-script>
     `);
 
     // Script should be in the <head> this time:
@@ -65,7 +65,7 @@ describe('peng-script for script added to <head>', () => {
   });
 
   it.only('should render each unique script once in <head> when once=true & head=true', async () => {
-    const page = await newSpecPage({ 
+    const page = await newSpecPage({
       components: [PengScript],
       // html: ''
     });
@@ -77,20 +77,20 @@ describe('peng-script for script added to <head>', () => {
     page.win.addEventListener('pengscript', eventSpy);
 
     await page.setContent(
-      `<peng-script src="https://foo/bar.js" trigger="now" head once id="elem1"></peng-script>
-      <peng-script src="https://foo/bar.js" trigger="now" head once id="elem2"></peng-script>`
+      `<facade-script src="https://foo/bar.js" trigger="now" head once id="elem1"></facade-script>
+      <facade-script src="https://foo/bar.js" trigger="now" head once id="elem2"></facade-script>`
     );
 
 
     expect(page.body).toEqualHtml(`
-      <peng-script src="https://foo/bar.js" trigger="now" head once status="loading" id="elem1">
-        <div class="peng-placeholder-content" data-script-status="loading"></div>
-        <div class="peng-scripted-content" data-script-status="loading" hidden></div>
-      </peng-script>
-      <peng-script src="https://foo/bar.js" trigger="now" head once status="loading" id="elem2">
-        <div class="peng-placeholder-content" data-script-status="loading"></div>
-        <div class="peng-scripted-content" data-script-status="loading" hidden></div>
-      </peng-script>
+      <facade-script src="https://foo/bar.js" trigger="now" head once status="loading" id="elem1">
+        <div class="facade-placeholder-content" data-script-status="loading"></div>
+        <div class="facade-scripted-content" data-script-status="loading" hidden></div>
+      </facade-script>
+      <facade-script src="https://foo/bar.js" trigger="now" head once status="loading" id="elem2">
+        <div class="facade-placeholder-content" data-script-status="loading"></div>
+        <div class="facade-scripted-content" data-script-status="loading" hidden></div>
+      </facade-script>
     `);
 
     // Emitted events
@@ -109,14 +109,14 @@ describe('peng-script for script added to <head>', () => {
   // it('should not render script tag until wait="2000"', async () => {
   //   const page = await newSpecPage({
   //     components: [PengScript],
-  //     html: `<peng-script src="https://foo/bar.js" trigger="now"></peng-script>`,
+  //     html: `<facade-script src="https://foo/bar.js" trigger="now"></facade-script>`,
   //   });
   //   expect(page.root).toEqualHtml(`
-  //     <peng-script src="https://foo/bar.js" trigger="now" status="loading">
-  //       <div class="peng-placeholder-content" data-script-status="loading"></div>
-  //       <div class="peng-scripted-content" data-script-status="loading" hidden>
+  //     <facade-script src="https://foo/bar.js" trigger="now" status="loading">
+  //       <div class="facade-placeholder-content" data-script-status="loading"></div>
+  //       <div class="facade-scripted-content" data-script-status="loading" hidden>
   //       </div>
-  //     </peng-script>
+  //     </facade-script>
   //   `);
   // });
 });

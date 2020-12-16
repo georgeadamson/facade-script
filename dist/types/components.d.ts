@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "./stencil-public-runtime";
-import { PengScriptEvent, PengScriptStatusName } from "./components/peng-script/peng-script";
+import { PengScriptEvent, PengScriptStatusName } from "./components/peng-script/facade-script";
 export namespace Components {
-    interface PengScript {
+    interface FacadeScript {
         /**
           * To expose error message for debugging etc:
          */
@@ -56,18 +56,18 @@ export namespace Components {
     }
 }
 declare global {
-    interface HTMLPengScriptElement extends Components.PengScript, HTMLStencilElement {
+    interface HTMLFacadeScriptElement extends Components.FacadeScript, HTMLStencilElement {
     }
-    var HTMLPengScriptElement: {
-        prototype: HTMLPengScriptElement;
-        new (): HTMLPengScriptElement;
+    var HTMLFacadeScriptElement: {
+        prototype: HTMLFacadeScriptElement;
+        new (): HTMLFacadeScriptElement;
     };
     interface HTMLElementTagNameMap {
-        "peng-script": HTMLPengScriptElement;
+        "facade-script": HTMLFacadeScriptElement;
     }
 }
 declare namespace LocalJSX {
-    interface PengScript {
+    interface FacadeScript {
         /**
           * To expose error message for debugging etc:
          */
@@ -116,14 +116,14 @@ declare namespace LocalJSX {
         "wait"?: number;
     }
     interface IntrinsicElements {
-        "peng-script": PengScript;
+        "facade-script": FacadeScript;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "peng-script": LocalJSX.PengScript & JSXBase.HTMLAttributes<HTMLPengScriptElement>;
+            "facade-script": LocalJSX.FacadeScript & JSXBase.HTMLAttributes<HTMLFacadeScriptElement>;
         }
     }
 }

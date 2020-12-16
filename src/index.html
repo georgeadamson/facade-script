@@ -8,32 +8,26 @@
     />
     <title>Stencil Component Starter</title>
 
-    <script type="module" src="/build/peng-script.esm.js"></script>
-    <script nomodule src="/build/peng-script.js"></script>
+    <script type="module" src="/build/facade-script.esm.js"></script>
+    <script nomodule src="/build/facade-script.js"></script>
   </head>
   <body>
     <div style="height: 50vh"></div>
-    <peng-script
+    <facade-script
       src="https://www.youtube.com/embed/9TPG80boMjY"
       iframe
       wait="5000"
       show-when="loading"
       timeout="5000"
-      >Placeholder for iframe</peng-script
+      >Placeholder for iframe</facade-script
     >
 
-    <peng-script
-      src="sample-script.js"
-      wait="2000"
-      show-when="loading"
-      global
-    >Placeholder for script</peng-script>
+    <facade-script src="sample-script.js" wait="2000" show-when="loading" global
+      >Placeholder for script</facade-script
+    >
 
-        <peng-script
-          src="sample-script.js"
-          wait="2000"
-          show-when="loading"
-          global
-        >Placeholder for script</peng-script>
+    <facade-script src="sample-script.js" wait="2000" show-when="loading" global
+      >Placeholder for script</facade-script
+    >
   </body>
 </html>

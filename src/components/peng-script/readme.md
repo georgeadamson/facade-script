@@ -1,9 +1,6 @@
-# peng-script
-
-
+# facade-script
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -22,14 +19,12 @@
 | `trigger`       | `trigger`   | Specify when the script will be added to the page. Default is to lazy load.                                                                                                        | `"click" \| "lazy" \| "now" \| Function`                                                                        | `'lazy'`                   |
 | `wait`          | `wait`      | Delay n milliseconds after being triggered.                                                                                                                                        | `number`                                                                                                        | `0`                        |
 
-
 ## Events
 
 | Event        | Description | Type                                                                                                                                   |
 | ------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `pengscript` |             | `CustomEvent<{ status: PengScriptStatusName; code: PengScriptStatusCode; error: 1; errorMessage: string; src: string; id?: string; }>` |
 
+---
 
-----------------------------------------------
-
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

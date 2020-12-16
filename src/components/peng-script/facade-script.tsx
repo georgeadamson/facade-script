@@ -55,13 +55,13 @@ const STATUS: { [key: string]: PengScriptStatusCode } = {
 const STATUS_NAME = {};
 for (const key in STATUS) STATUS_NAME[STATUS[key]] = key;
 
-// Global script load state: (Shared by all instances of <peng-script>)
+// Global script load state: (Shared by all instances of <facade-script>)
 // When a script must only ever be loaded isOnce, we use this to track whether it's on the page already.
 // Note that it is a map so we can track different script src urls.
 const globalStatusCode: { [src: string]: PengScriptStatusCode } = {};
 
 @Component({
-  tag: 'peng-script',
+  tag: 'facade-script',
   shadow: true
 })
 export class PengScript {
@@ -312,7 +312,7 @@ export class PengScript {
       <Host {...hostProps}>
         <div
           data-script-status={statusMessage}
-          class="peng-placeholder-content"
+          class="facade-placeholder-content"
           hidden={hidePlaceholder}
         >
           <slot></slot>
@@ -320,7 +320,7 @@ export class PengScript {
 
         <div
           data-script-status={statusMessage}
-          class="peng-scripted-content"
+          class="facade-scripted-content"
           hidden={!hidePlaceholder}
         >
           {script}

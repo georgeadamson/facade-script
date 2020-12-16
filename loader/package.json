@@ -1,5 +1,5 @@
 {
-  "name": "peng-script-loader",
+  "name": "facade-script-loader",
   "typings": "./index.d.ts",
   "module": "./index.js",
   "main": "./index.cjs.js",

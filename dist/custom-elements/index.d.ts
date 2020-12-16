@@ -1,11 +1,11 @@
-/* PengScript custom elements bundle */
+/* FacadeScript custom elements bundle */
 
 import { Components, JSX } from "../types/components";
 
-interface PengScript extends Components.PengScript, HTMLElement {}
-export const PengScript: {
-  prototype: PengScript;
-  new (): PengScript;
+interface FacadeScript extends Components.FacadeScript, HTMLElement {}
+export const FacadeScript: {
+  prototype: FacadeScript;
+  new (): FacadeScript;
 };
 
 /**

@@ -1,7 +1,7 @@
 import { Config } from '@stencil/core';
 
 export const config: Config = {
-  namespace: 'peng-script',
+  namespace: 'facade-script',
   outputTargets: [
     {
       type: 'dist',
