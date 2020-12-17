@@ -21,7 +21,7 @@ Loading can be triggered when you:
 
 ## Step 1
 
-Include the script in your page:
+Include the script in your page: (~8.5kb gzipped)
 
 ```js
 <script async type="module" src="https://unpkg.com/facade-script/dist/facade-script/facade-script.esm.js"
@@ -30,11 +30,11 @@ Include the script in your page:
 ></script>
 ```
 
-☝️ Recommend using `async` because there's typically no hurry to fetch this script, but that's up to you.
+☝️ Recommend using `async` for minimal impact on page load speed and because there's typically no hurry to fetch this script, but that's up to you.
 
 ## Step 2
 
-Use the tag instead of the standard script or iframe...
+Use the facade-script tag instead of the standard script or iframe...
 
 ### To lazyload a script only when the user scrolls down to it:
 
@@ -78,7 +78,7 @@ Use this to ensure a script is only loaded once on the page, even when there are
 By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
 
 ```js
-<facade-script once src="https://path/to/a/script.js"></facade-script>
+<facade-script global src="https://path/to/a/script.js"></facade-script>
 ```
 
 ---
@@ -87,7 +87,7 @@ By default the script will be added to the page within the facade-script tags. U
 
 When should the script be added to the page?
 
-- `now` - Immediately. Much like a standard script.
+- `now` - Immediately. Much like a standard script. Kinda pointless but useful when debugging.
 - `lazy` - When this element is scrolled into view. (Default)
 - `click` - When this element is clicked.
 
@@ -105,7 +105,7 @@ When should the script be added to the page?
 
 ### `wait="..."` (milliseconds)
 
-Delay n milliseconds after being triggered, before adding the script or iframe to the page.
+After being triggered, delay n milliseconds before adding the script or iframe to the page.
 
 ```js
 <facade-script
@@ -115,9 +115,11 @@ Delay n milliseconds after being triggered, before adding the script or iframe t
 ></facade-script>
 ```
 
+### `props` (for adding attributes to your script or iframe)
+
 See this readme for a [full list of config options](https://github.com/georgeadamson/facade-script/tree/master/src/components/facade-script).
 
-## Stats
+## Notes
 
 - Curently in Beta. Appears stable but still testing in the wild.
 - ~8.5kb when you use the CDN link (minified & gzipped). I have yet to see if I can make it smaller with some more analysis.
