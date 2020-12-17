@@ -108,3 +108,8 @@ Delay n milliseconds after being triggered.
   src="https://www.youtube.com/embed/GTUruS-lnEo"
 ></facade-script>
 ```
+
+## Stats
+
+- This is an early version. Stable but still being tested in the wild.
+- ~30kb when you use the CDN link but I have not optimised or minified it yet.
