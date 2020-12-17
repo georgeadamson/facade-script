@@ -111,6 +111,8 @@ Delay n milliseconds after being triggered, before adding the script or iframe t
 ></facade-script>
 ```
 
+See this readme for a [full list of config options](https://github.com/georgeadamson/facade-script/tree/master/src/components/facade-script).
+
 ## Stats
 
 - This is an early version. Stable but still being tested in the wild.
