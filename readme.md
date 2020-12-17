@@ -4,29 +4,33 @@
 
 # \<facade-script>
 
-A custom element to lazy-load or late-load any script or embed only when the user _needs_ it.
+A custom element to **lazy-load** or late-load any script or embed, only when the user _needs_ it.
 
-For example to only load a YouTube iframe when the user _scrolls down_ to it.
+For example to only load a YouTube iFrame when the user _scrolls down_ to it.
 
-Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-with-mindful-loading-28905edac84d) or [Import on interaction pattern](https://addyosmani.com/blog/import-on-interaction/)
+- JS: `<facade-script src="/lazyload/any/script.js">`
+
+- iFrame: `<facade-script iframe src="/lazyload/any/embed.js">`
+
+Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-with-mindful-loading-28905edac84d) or [Import on interaction pattern](https://addyosmani.com/blog/import-on-interaction/).
 
 Loading can be triggered when you:
 
-- Scroll this element into view (lazyload is the default)
+- Scroll it into view (lazyload is the default)
 - Click it (for example your own Play button)
 
 ## Step 1
 
-Include this script in your page:
-(In the head without the async attribute if it's urgent, otherwise further down :)
+Include the script in your page:
 
 ```js
-<script
-  async
-  type="module"
-  src="https://unpkg.com/facade-script/dist/facade-script/facade-script.esm.js"
+<script async type="module" src="https://unpkg.com/facade-script/dist/facade-script/facade-script.esm.js"
+></script>
+<script async nomodule src="https://unpkg.com/facade-script/dist/facade-script/facade-script.js"
 ></script>
 ```
+
+☝️ Recommend using `async` because there's typically no hurry to fetch this script, but that's up to you.
 
 ## Step 2
 
@@ -115,5 +119,5 @@ See this readme for a [full list of config options](https://github.com/georgeada
 
 ## Stats
 
-- This is an early version. Stable but still being tested in the wild.
-- ~30kb when you use the CDN link but I have not optimised or minified it yet.
+- Curently in Beta. Appears stable but still testing in the wild.
+- ~8.5kb when you use the CDN link (minified & gzipped). I have yet to see if I can make it smaller with some more analysis.
