@@ -1,4 +1,5 @@
-import { r as registerInstance, e as createEvent, h, f as Host, g as getElement } from './index-1a695d4d.js';
+import { attachShadow, createEvent, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
+export { setAssetPath } from '@stencil/core/internal/client';
 
 const ERROR_MESSAGE = {
   1: 'Script triggered but missing src',
@@ -25,9 +26,11 @@ for (const key in STATUS)
 // When a script must only ever be loaded isOnce, we use this to track whether it's on the page already.
 // Note that it is a map so we can track different script src urls.
 const globalStatusCode = {};
-const PengScript = class {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
+const PengScript = class extends HTMLElement {
+  constructor() {
+    super();
+    this.__registerHost();
+    attachShadow(this);
     this.pengscript = createEvent(this, "pengscript", 7);
     /** Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. */
     this.isOnce = false;
@@ -71,9 +74,6 @@ const PengScript = class {
           // this.status < STATUS.LOADING &&
           !(this.isOnce && isScriptOnPage(src))) {
           createElement(isIframe ? 'iframe' : 'script', Object.assign({ src, onload: onLoad }, parseJSON(props)), document.head);
-        }
-        else {
-          // The render method will render the script or iframe because status >= TRIGGERED
         }
         // Update status:
         this.status = globalStatusCode[src] = STATUS.LOADING;
@@ -192,7 +192,7 @@ const PengScript = class {
     const hidePlaceholder = status >= showWhenStatus && status !== STATUS.TIMEOUT;
     return (h(Host, Object.assign({}, hostProps), h("div", { "data-script-status": statusMessage, class: "facade-placeholder-content", hidden: hidePlaceholder }, h("slot", null)), h("div", { "data-script-status": statusMessage, class: "facade-scripted-content", hidden: !hidePlaceholder }, script)));
   }
-  get host() { return getElement(this); }
+  get host() { return this; }
   static get watchers() { return {
     "error": ["onError"],
     "status": ["onStatus"]
@@ -271,4 +271,17 @@ async function awaitScriptReady(test, timeout, interval = 200) {
   });
 }
 
-export { PengScript as facade_script };
+const FacadeScript = /*@__PURE__*/proxyCustomElement(PengScript, [1,"facade-script",{"srcProd":[1,"src"],"isIframe":[4,"iframe"],"isOnce":[4,"once"],"isGlobal":[4,"global"],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errorMessage":[513,"error"],"statusMessage":[513,"status"],"status":[32],"error":[32]}]);
+const defineCustomElements = (opts) => {
+  if (typeof customElements !== 'undefined') {
+    [
+      FacadeScript
+    ].forEach(cmp => {
+      if (!customElements.get(cmp.is)) {
+        customElements.define(cmp.is, cmp, opts);
+      }
+    });
+  }
+};
+
+export { FacadeScript, defineCustomElements };

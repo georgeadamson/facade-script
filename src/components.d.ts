@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PengScriptEvent, PengScriptStatusName } from "./components/peng-script/facade-script";
+import { PengScriptEvent, PengScriptStatusName } from "./components/facade-script/facade-script";
 export namespace Components {
     interface FacadeScript {
         /**
@@ -25,7 +25,7 @@ export namespace Components {
          */
         "isOnce"?: boolean;
         /**
-          * A callback function will triggered when the script or iframe has loaded and run.
+          * Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
          */
         "isReady"?: Function;
         /**
@@ -85,7 +85,7 @@ declare namespace LocalJSX {
          */
         "isOnce"?: boolean;
         /**
-          * A callback function will triggered when the script or iframe has loaded and run.
+          * Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
          */
         "isReady"?: Function;
         "onPengscript"?: (event: CustomEvent<PengScriptEvent>) => void;

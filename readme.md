@@ -10,10 +10,10 @@ For example to only load a YouTube iframe when the user _scrolls down_ to it.
 
 Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-with-mindful-loading-28905edac84d) or [Import on interaction pattern](https://addyosmani.com/blog/import-on-interaction/)
 
-Loading can be triggered by:
+Loading can be triggered when you:
 
-- Scrolling (lazyload is the default)
-- Click (such as you own Play button)
+- Scroll this element into view (lazyload is the default)
+- Click it (for example your own Play button)
 
 ## Step 1
 
@@ -84,7 +84,7 @@ By default the script will be added to the page within the facade-script tags. U
 When should the script be added to the page?
 
 - `now` - Immediately. Much like a standard script.
-- `lazy` - When this element is scrolled into view.
+- `lazy` - When this element is scrolled into view. (Default)
 - `click` - When this element is clicked.
 
 ```js
@@ -101,7 +101,7 @@ When should the script be added to the page?
 
 ### `wait="..."` (milliseconds)
 
-Delay n milliseconds after being triggered.
+Delay n milliseconds after being triggered, before adding the script or iframe to the page.
 
 ```js
 <facade-script

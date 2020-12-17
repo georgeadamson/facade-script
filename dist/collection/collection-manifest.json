@@ -1,0 +1,12 @@
+{
+  "entries": [
+    "./components/facade-script/facade-script.js"
+  ],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "2.0.1",
+    "typescriptVersion": "4.0.2"
+  },
+  "collections": [],
+  "bundles": []
+}
