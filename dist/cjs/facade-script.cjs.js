@@ -1,9 +1,9 @@
 'use strict';
 
-const index = require('./index-d0fcffb1.js');
+const index = require('./index-9317d673.js');
 
 /*
- Stencil Client Patch Browser v2.0.1 | MIT Licensed | https://stenciljs.com
+ Stencil Client Patch Browser v2.3.0 | MIT Licensed | https://stenciljs.com
  */
 const getDynamicImportFunction = (namespace) => `__sc_import_${namespace.replace(/\s|-/g, '_')}`;
 const patchBrowser = () => {
@@ -41,7 +41,7 @@ const patchBrowser = () => {
         if ( !index.win.customElements) {
             // module support, but no custom elements support (Old Edge)
             // @ts-ignore
-            return Promise.resolve().then(function () { return require(/* webpackChunkName: "polyfills-dom" */ './dom-4fd1a369.js'); }).then(() => opts);
+            return Promise.resolve().then(function () { return require(/* webpackChunkName: "polyfills-dom" */ './dom-9c8e2fa2.js'); }).then(() => opts);
         }
     }
     return index.promiseResolve(opts);

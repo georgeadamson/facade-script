@@ -1,24 +1,23 @@
 'use strict';
 
 function _interopNamespace(e) {
-  if (e && e.__esModule) { return e; } else {
-    var n = Object.create(null);
-    if (e) {
-      Object.keys(e).forEach(function (k) {
-        if (k !== 'default') {
-          var d = Object.getOwnPropertyDescriptor(e, k);
-          Object.defineProperty(n, k, d.get ? d : {
-            enumerable: true,
-            get: function () {
-              return e[k];
-            }
-          });
-        }
-      });
-    }
-    n['default'] = e;
-    return Object.freeze(n);
+  if (e && e.__esModule) return e;
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () {
+            return e[k];
+          }
+        });
+      }
+    });
   }
+  n['default'] = e;
+  return Object.freeze(n);
 }
 
 const NAMESPACE = 'facade-script';
@@ -1022,7 +1021,7 @@ const callRender = (hostRef, instance) => {
         }
     }
     catch (e) {
-        consoleError(e);
+        consoleError(e, hostRef.$hostElement$);
     }
     return instance;
 };
@@ -1119,6 +1118,7 @@ const getValue = (ref, propName) => getHostRef(ref).$instanceValues$.get(propNam
 const setValue = (ref, propName, newVal, cmpMeta) => {
     // check our new property value against our internal value
     const hostRef = getHostRef(ref);
+    const elm =  hostRef.$hostElement$ ;
     const oldVal = hostRef.$instanceValues$.get(propName);
     const flags = hostRef.$flags$;
     const instance =  hostRef.$lazyInstance$ ;
@@ -1139,7 +1139,7 @@ const setValue = (ref, propName, newVal, cmpMeta) => {
                             instance[watchMethodName](newVal, oldVal, propName);
                         }
                         catch (e) {
-                            consoleError(e);
+                            consoleError(e, elm);
                         }
                     });
                 }
@@ -1350,9 +1350,11 @@ const patchCloneNode = (HostElementPrototype) => {
         const clonedNode = orgCloneNode.call(srcNode, isShadowDom ? deep : false);
         if ( !isShadowDom && deep) {
             let i = 0;
-            let slotted;
+            let slotted, nonStencilNode;
+            let stencilPrivates = ['s-id', 's-cr', 's-lr', 's-rc', 's-sc', 's-p', 's-cn', 's-sr', 's-sn', 's-hn', 's-ol', 's-nr', 's-si'];
             for (; i < srcNode.childNodes.length; i++) {
                 slotted = srcNode.childNodes[i]['s-nr'];
+                nonStencilNode = stencilPrivates.every((privateField) => !srcNode.childNodes[i][privateField]);
                 if (slotted) {
                     if ( clonedNode.__appendChild) {
                         clonedNode.__appendChild(slotted.cloneNode(true));
@@ -1360,6 +1362,9 @@ const patchCloneNode = (HostElementPrototype) => {
                     else {
                         clonedNode.appendChild(slotted.cloneNode(true));
                     }
+                }
+                if (nonStencilNode) {
+                    clonedNode.appendChild(srcNode.childNodes[i].cloneNode(true));
                 }
             }
         }
@@ -1564,7 +1569,7 @@ const registerHost = (elm, cmpMeta) => {
     return hostRefs.set(elm, hostRef);
 };
 const isMemberInElement = (elm, memberName) => memberName in elm;
-const consoleError = (e) => console.error(e);
+const consoleError = (e, el) => ( 0, console.error)(e, el);
 const cmpModules = /*@__PURE__*/ new Map();
 const loadModule = (cmpMeta, hostRef, hmrVersionId) => {
     // loadModuleImport

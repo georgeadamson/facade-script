@@ -1,7 +1,7 @@
-import { p as plt, w as win, d as doc, N as NAMESPACE, a as promiseResolve, H, b as bootstrapLazy } from './index-31b83128.js';
+import { p as plt, w as win, d as doc, N as NAMESPACE, a as promiseResolve, H, b as bootstrapLazy } from './index-84403b42.js';
 
 /*
- Stencil Client Patch Browser v2.0.1 | MIT Licensed | https://stenciljs.com
+ Stencil Client Patch Browser v2.3.0 | MIT Licensed | https://stenciljs.com
  */
 const getDynamicImportFunction = (namespace) => `__sc_import_${namespace.replace(/\s|-/g, '_')}`;
 const patchBrowser = () => {
@@ -39,7 +39,7 @@ const patchBrowser = () => {
         if ( !win.customElements) {
             // module support, but no custom elements support (Old Edge)
             // @ts-ignore
-            return import(/* webpackChunkName: "polyfills-dom" */ './dom-ebea661b.js').then(() => opts);
+            return import(/* webpackChunkName: "polyfills-dom" */ './dom-424264d0.js').then(() => opts);
         }
     }
     return promiseResolve(opts);

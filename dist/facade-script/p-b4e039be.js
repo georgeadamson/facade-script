@@ -8,7 +8,7 @@ function(t){"function"!=typeof t.matches&&(t.matches=t.msMatchesSelector||t.mozM
 /*!
 Element.getRootNode()
 */
-function(t){function n(t){return t&&t.parentNode?n(t.parentNode):t}"function"!=typeof t.getRootNode&&(t.getRootNode=function(t){return t&&t.composed?function t(i){return(i=n(i))&&11===i.nodeType?t(i.host):i}(this):n(this)})}(Element.prototype),
+function(t){function n(t){return(t=i(t))&&11===t.nodeType?n(t.host):t}function i(t){return t&&t.parentNode?i(t.parentNode):t}"function"!=typeof t.getRootNode&&(t.getRootNode=function(t){return t&&t.composed?n(this):i(this)})}(Element.prototype),
 /*!
 Element.isConnected()
 */

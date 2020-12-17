@@ -1,4 +1,4 @@
-import { r as registerInstance, c as createEvent, h, e as Host, g as getElement } from './index-31b83128.js';
+import { r as registerInstance, c as createEvent, h, e as Host, g as getElement } from './index-84403b42.js';
 
 const ERROR_MESSAGE = {
   1: 'Script triggered but missing src',
