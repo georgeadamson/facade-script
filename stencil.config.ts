@@ -3,16 +3,7 @@ import { Config } from '@stencil/core';
 export const config: Config = {
   namespace: 'facade-script',
   buildEs5: 'prod',
-  extras: {
-    cssVarsShim: true,
-    dynamicImportShim: true,
-    shadowDomShim: true,
-    safari10: true,
-    scriptDataOpts: false,
-    appendChildSlotFix: true,
-    cloneNodeFix: true,
-    slotChildNodesFix: true,
-  },
+
   outputTargets: [
     {
       type: 'dist',
@@ -30,4 +21,16 @@ export const config: Config = {
       serviceWorker: null, // disable service workers
     },
   ],
+
+  // https://stenciljs.com/docs/config-extras
+  extras: {
+    cssVarsShim: true,
+    dynamicImportShim: true,
+    shadowDomShim: true,
+    safari10: true,
+    scriptDataOpts: false,
+    appendChildSlotFix: true,
+    cloneNodeFix: true,
+    slotChildNodesFix: true,
+  },
 };
