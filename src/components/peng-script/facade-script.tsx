@@ -85,7 +85,7 @@ export class PengScript {
   @Prop() showWhen?: PengScriptStatusName = 'LOADED';
   /** Milliseconds to wait before discarding a slow loading script or iframe. */
   @Prop() timeout?: number;
-  /** A callback function will triggered when the script or iframe has loaded and run. */
+  /** Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
   @Prop({ attribute: 'ready' }) isReady?: Function;
 
   /** To expose error message for debugging etc: */

@@ -2,9 +2,33 @@
 
 # \<facade-script>
 
-A web component to lazy-load or late-load scripts & widgets only when the user _needs_ them.
+A custom element to lazy-load or late-load any script or embed only when the user _needs_ it.
+
+For example to only load a YouTube iframe when the user _scrolls down_ to it.
 
 Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-with-mindful-loading-28905edac84d) or [Import on interaction pattern](https://addyosmani.com/blog/import-on-interaction/)
+
+Loading can be triggered by:
+
+- Scrolling (lazyload is the default)
+- Click (such as you own Play button)
+
+## Step 1
+
+Include this script in your page:
+(In the head without the async attribute if it's urgent, otherwise further down :)
+
+```js
+<script
+  async
+  type="module"
+  src="https://unpkg.com/facade-script/dist/facade-script/facade-script.esm.js"
+></script>
+```
+
+## Step 2
+
+Use the tag instead of the standard script or iframe...
 
 ### To lazyload a script only when the user scrolls down to it:
 
@@ -19,14 +43,14 @@ Just use this tag instead of a regular `<script>` tag:
 ```js
 <facade-script
   iframe
-  src="https://www.youtube.com/watch?v=GTUruS-lnEo"
+  src="https://www.youtube.com/embed/GTUruS-lnEo"
 ></facade-script>
 ```
 
 ### To show a placeholder until a YouTube video is lazyloaded:
 
 ```js
-<facade-script iframe src="https://www.youtube.com/watch?v=GTUruS-lnEo">
+<facade-script iframe src="https://www.youtube.com/embed/GTUruS-lnEo">
   <p>Loading...</p>
 </facade-script>
 ```
@@ -35,7 +59,7 @@ Just use this tag instead of a regular `<script>` tag:
 
 ### `once` (boolean)
 
-Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
+Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. Without this flag, every instance of this component will add the script to the page when triggered.
 
 ```js
 <facade-script once src="https://path/to/a/script.js"></facade-script>
@@ -65,7 +89,7 @@ When should the script be added to the page?
 <facade-script
   iframe
   trigger="click"
-  src="https://www.youtube.com/watch?v=GTUruS-lnEo"
+  src="https://www.youtube.com/embed/GTUruS-lnEo"
 >
   <button>Play video</button>
 </facade-script>
@@ -81,6 +105,6 @@ Delay n milliseconds after being triggered.
 <facade-script
   iframe
   wait="2000"
-  src="https://www.youtube.com/watch?v=GTUruS-lnEo"
+  src="https://www.youtube.com/embed/GTUruS-lnEo"
 ></facade-script>
 ```
