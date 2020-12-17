@@ -20,7 +20,7 @@ Loading can be triggered when you:
 - Scroll it into view (lazyload is the default)
 - Click it (for example your own Play button)
 
-## Step 1
+## Step 1 of 2
 
 Include the script in your page: (~8.5kb gzipped)
 
@@ -33,7 +33,7 @@ Include the script in your page: (~8.5kb gzipped)
 
 ☝️ Recommend using `async` for minimal impact on page load speed and because there's typically no hurry to fetch this script, but that's up to you.
 
-## Step 2
+## Step 2 of 2
 
 Use the facade-script tag instead of the standard script or iframe...
 
@@ -41,11 +41,17 @@ Use the facade-script tag instead of the standard script or iframe...
 
 Just use this tag instead of a regular `<script>` tag:
 
+A `<script>` tag will only be added to the page when the user scrolls this into view.
+
 ```js
 <facade-script src="https://path/to/a/script.js"></facade-script>
 ```
 
 ### To lazyload a YouTube video:
+
+An `<iframe>` tag will only be added to the page when the user scrolls this into view.
+
+Recommended: For improved accessibility, supply a title attribute for the iframe too. See `props` below.
 
 ```js
 <facade-script
@@ -54,7 +60,7 @@ Just use this tag instead of a regular `<script>` tag:
 ></facade-script>
 ```
 
-### To show a placeholder until a YouTube video is lazyloaded:
+### To show a placeholder until the iframe embed has loaded:
 
 ```js
 <facade-script iframe src="https://www.youtube.com/embed/GTUruS-lnEo">
@@ -118,7 +124,31 @@ After being triggered, delay n milliseconds before adding the script or iframe t
 
 ### `props` (for adding attributes to your script or iframe)
 
-Sometimes you need to set attributes on
+Sometimes you need to set attributes on the `<script>` or `<iframe>` when it gets created.
+
+Attributes can be supplied as a map of {key:value} supplied as JSON (or as an object if you're using JSX).
+
+For example, iframes should have a title attribute:
+
+```html
+<facade-script
+  iframe
+  src="https://www.youtube.com/embed/GTUruS-lnEo"
+  props="{\"title\":\"Title of iframe\"}"
+></facade-script>
+```
+
+Or in JSX:
+
+```jsx
+<facade-script
+  iframe
+  src="https://www.youtube.com/embed/GTUruS-lnEo"
+  props={{ title: 'Title of iframe' }}
+></facade-script>
+```
+
+---
 
 See this readme for a [full list of config options](https://github.com/georgeadamson/facade-script/tree/master/src/components/facade-script).
 
@@ -126,3 +156,4 @@ See this readme for a [full list of config options](https://github.com/georgeada
 
 - Curently in Beta. Appears stable but still testing in the wild.
 - ~8.5kb when you use the CDN link (minified & gzipped). I have yet to see if I can make it smaller with some more analysis.
+- To do: Solutions for better accessibility of placeholders etc.
