@@ -8,8 +8,9 @@ A custom element to **lazy-load** or late-load any script or embed, only when th
 
 For example to only load a YouTube iFrame when the user _scrolls down_ to it.
 
-- JS: `<facade-script src="/lazyload/any/script.js">`
+TLDR usage:
 
+- JS: `<facade-script src="/lazyload/any/script.js">` or
 - iFrame: `<facade-script iframe src="/lazyload/any/embed.js">`
 
 Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-with-mindful-loading-28905edac84d) or [Import on interaction pattern](https://addyosmani.com/blog/import-on-interaction/).
@@ -36,7 +37,7 @@ Include the script in your page: (~8.5kb gzipped)
 
 Use the facade-script tag instead of the standard script or iframe...
 
-### To lazyload a script only when the user scrolls down to it:
+### To lazyload a script:
 
 Just use this tag instead of a regular `<script>` tag:
 
@@ -44,7 +45,7 @@ Just use this tag instead of a regular `<script>` tag:
 <facade-script src="https://path/to/a/script.js"></facade-script>
 ```
 
-### To lazyload a YouTube video only when the user scrolls down to it:
+### To lazyload a YouTube video:
 
 ```js
 <facade-script
@@ -116,6 +117,8 @@ After being triggered, delay n milliseconds before adding the script or iframe t
 ```
 
 ### `props` (for adding attributes to your script or iframe)
+
+Sometimes you need to set attributes on
 
 See this readme for a [full list of config options](https://github.com/georgeadamson/facade-script/tree/master/src/components/facade-script).
 
