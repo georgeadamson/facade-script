@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-14cb2d1d.js');
+const index = require('./index-d0fcffb1.js');
 
 const ERROR_MESSAGE = {
   1: 'Script triggered but missing src',
