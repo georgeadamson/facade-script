@@ -35,11 +35,9 @@ Include the script in your page: (~8.5kb gzipped)
 
 ## Step 2 of 2
 
-Use the facade-script tag instead of the standard script or iframe...
+Then you simply use the facade-script tag instead of a standard script or iframe...
 
 ### To lazyload a script:
-
-Just use this tag instead of a regular `<script>` tag:
 
 A `<script>` tag will only be added to the page when the user scrolls this into view.
 
@@ -85,7 +83,7 @@ Use this to ensure a script is only loaded once on the page, even when there are
 By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
 
 ```js
-<facade-script global src="https://path/to/a/script.js"></facade-script>
+<facade-script global once src="https://path/to/a/script.js"></facade-script>
 ```
 
 ---
@@ -154,6 +152,7 @@ See this readme for a [full list of config options](https://github.com/georgeada
 
 ## Notes
 
+- But why is it called facade-script? Because of the Facade Pattern: As well as lazyloading it can render a fake UI or placeholder until the real third party loads.
 - Curently in Beta. Appears stable but still testing in the wild.
 - ~8.5kb when you use the CDN link (minified & gzipped). I have yet to see if I can make it smaller with some more analysis.
 - To do: Solutions for better accessibility of placeholders etc.

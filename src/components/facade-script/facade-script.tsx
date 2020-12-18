@@ -65,26 +65,35 @@ const globalStatusCode: { [src: string]: PengScriptStatusCode } = {};
   shadow: true
 })
 export class PengScript {
+  /** src for the <script> or <ifram> that will be added to the DOM when lazyload is triggered. */
   @Prop({ attribute: 'src' }) srcProd: string;
 
-  // Options:
+  // The src is required. The rest are options:
 
   /** By default a script tag will be rendered. Use this option to render an iframe instead. */
   @Prop({ attribute: 'iframe' }) isIframe?: boolean;
+
   /** Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. */
   @Prop({ attribute: 'once' }) isOnce?: boolean = false;
+
   /** By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead. */
   @Prop({ attribute: 'global' }) isGlobal?: boolean = false;
+
   /** Specify when the script will be added to the page. Default is to lazy load. */
   @Prop() trigger?: 'now' | 'lazy' | 'click' | Function = 'lazy';
+
   /** Delay n milliseconds after being triggered. */
   @Prop() wait?: number = 0;
+
   /** Optional props to set on the script or iframe. Map of key:values supplied as object or JSON. */
   @Prop() props?: string | object;
+
   /** Fine tune when an iframe will be shown. Defaults to wait until is has loaded. */
   @Prop() showWhen?: PengScriptStatusName = 'LOADED';
+
   /** Milliseconds to wait before discarding a slow loading script or iframe. */
   @Prop() timeout?: number;
+
   /** Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
   @Prop({ attribute: 'ready' }) isReady?: Function;
 
