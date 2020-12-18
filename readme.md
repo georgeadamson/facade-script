@@ -152,7 +152,8 @@ See this readme for a [full list of config options](https://github.com/georgeada
 
 ## Notes
 
-- But why is it called facade-script? Because of the Facade Pattern: As well as lazyloading it can render a fake UI or placeholder until the real third party loads.
 - Curently in Beta. Appears stable but still testing in the wild.
 - ~8.5kb when you use the CDN link (minified & gzipped). I have yet to see if I can make it smaller with some more analysis.
 - To do: Solutions for better accessibility of placeholders etc.
+- To do: Consider what happens during prerender. This should probably not render the script or iframe when running server-side.
+- But why is it called facade-script? Because of the Facade Pattern: As well as lazyloading it can render a fake UI or placeholder until the real third party loads.
