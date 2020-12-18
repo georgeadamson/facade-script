@@ -65,7 +65,7 @@ const globalStatusCode: { [src: string]: PengScriptStatusCode } = {};
   shadow: true
 })
 export class PengScript {
-  /** src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
+  /** Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
   @Prop({ attribute: 'src' }) srcProd: string;
 
   // The src is required. The rest are options:
