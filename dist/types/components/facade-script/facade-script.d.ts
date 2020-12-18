@@ -11,7 +11,7 @@ export declare type PengScriptEvent = {
 };
 export declare type PengScriptErrorCode = 1;
 export declare class PengScript {
-  /** src for the <script> or <ifram> that will be added to the DOM when lazyload is triggered. */
+  /** src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
   srcProd: string;
   /** By default a script tag will be rendered. Use this option to render an iframe instead. */
   isIframe?: boolean;

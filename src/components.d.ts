@@ -37,7 +37,7 @@ export namespace Components {
          */
         "showWhen"?: PengScriptStatusName;
         /**
-          * src for the <script> or <ifram> that will be added to the DOM when lazyload is triggered.
+          * src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered.
          */
         "srcProd": string;
         /**
@@ -101,7 +101,7 @@ declare namespace LocalJSX {
          */
         "showWhen"?: PengScriptStatusName;
         /**
-          * src for the <script> or <ifram> that will be added to the DOM when lazyload is triggered.
+          * src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered.
          */
         "srcProd"?: string;
         /**
