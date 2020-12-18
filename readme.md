@@ -117,6 +117,7 @@ When should the script be added to the page?
 ### `wait="..."` (milliseconds)
 
 After being triggered, delay n milliseconds before adding the script or iframe to the page.
+You could combine it with `trigger="now"` to make the script run n milliseconds after DOM load.
 
 ```html
 <facade-script
