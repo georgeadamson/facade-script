@@ -120,6 +120,8 @@ After being triggered, delay n milliseconds before adding the script or iframe t
 ></facade-script>
 ```
 
+---
+
 ### `props` (to add attributes to your script or iframe)
 
 Sometimes you need to set attributes on the `<script>` or `<iframe>` when it gets created.

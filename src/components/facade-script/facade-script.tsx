@@ -61,8 +61,7 @@ for (const key in STATUS) STATUS_NAME[STATUS[key]] = key;
 const globalStatusCode: { [src: string]: PengScriptStatusCode } = {};
 
 @Component({
-  tag: 'facade-script',
-  shadow: true
+  tag: 'facade-script'
 })
 export class PengScript {
   /** Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
@@ -97,18 +96,18 @@ export class PengScript {
   /** Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
   @Prop({ attribute: 'ready' }) isReady?: Function;
 
-  /** To expose error message for debugging etc: */
+  /** Readonly. Exposes any error message for debugging or as a hook for a CSS selector: */
   @Prop({ reflect: true, attribute: 'error' }) errorMessage: string;
 
-  /** To expose status message for debugging etc: */
+  /** Readonly: Expose the current status for debugging or as a hook for a CSS selector: */
   @Prop({ reflect: true, attribute: 'status' }) statusMessage: PengScriptStatusName = 'IDLE';
 
-  // This is a reference to this webcomponent element. Needed for IntersectionObserver.
+  // This is an internal reference to this webcomponent element. Needed for IntersectionObserver.
   @Element() private host: HTMLElement;
 
   // Local script load state:
-  @State() status: PengScriptStatusCode = 0;
-  @State() error: PengScriptErrorCode; // undefined is equivalent to 0
+  @State() private status: PengScriptStatusCode = 0;
+  @State() private error: PengScriptErrorCode; // undefined is equivalent to 0
 
   // Update error attribute whenever error happens:
   @Watch('error')
@@ -266,6 +265,7 @@ export class PengScript {
     }
   };
 
+  // Handler triggered by the load event of the script or iframe:
   private onLoad = () => {
     if (this.status !== STATUS.TIMEOUT) {
       const { src, isOnce, isReady, timeout, timeoutId } = this;
@@ -279,8 +279,6 @@ export class PengScript {
         .catch((err) => console.error('awaitScriptReady', err));
     }
   };
-
-
 
   render() {
     const {
@@ -413,11 +411,11 @@ async function awaitScriptReady(test: Function, timeout: number, interval: numbe
     }, parseInt(interval as unknown as string) || 200);
 
     // Define a timeout too: (Recommended)
-    if (parseInt(timeout as unknown as string)) {
+    if (timeout) {
       timeoutId = setTimeout(() => {
         clearInterval(intervalId);
         reject('timeout');
-      }, parseInt(timeout as unknown as string));
+      }, parseInt(timeout as unknown as string) || 30000);
     }
   });
 }
