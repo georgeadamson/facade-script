@@ -101,7 +101,7 @@ export class PengScript {
   @Prop({ reflect: true, attribute: 'error' }) errorMessage: string;
 
   /** To expose status message for debugging etc: */
-  @Prop({ reflect: true, attribute: 'status' }) statusMessage: PengScriptStatusName = STATUS_NAME[STATUS.IDLE];
+  @Prop({ reflect: true, attribute: 'status' }) statusMessage: PengScriptStatusName = 'IDLE';
 
   // This is a reference to this webcomponent element. Needed for IntersectionObserver.
   @Element() private host: HTMLElement;
