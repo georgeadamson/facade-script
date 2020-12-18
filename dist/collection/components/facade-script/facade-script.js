@@ -207,7 +207,7 @@ export class PengScript {
       "optional": false,
       "docs": {
         "tags": [],
-        "text": ""
+        "text": "src for the <script> or <ifram> that will be added to the DOM when lazyload is triggered."
       },
       "attribute": "src",
       "reflect": false

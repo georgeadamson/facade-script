@@ -36,6 +36,9 @@ export namespace Components {
           * Fine tune when an iframe will be shown. Defaults to wait until is has loaded.
          */
         "showWhen"?: PengScriptStatusName;
+        /**
+          * src for the <script> or <ifram> that will be added to the DOM when lazyload is triggered.
+         */
         "srcProd": string;
         /**
           * To expose status message for debugging etc:
@@ -97,6 +100,9 @@ declare namespace LocalJSX {
           * Fine tune when an iframe will be shown. Defaults to wait until is has loaded.
          */
         "showWhen"?: PengScriptStatusName;
+        /**
+          * src for the <script> or <ifram> that will be added to the DOM when lazyload is triggered.
+         */
         "srcProd"?: string;
         /**
           * To expose status message for debugging etc:
