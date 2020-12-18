@@ -26,18 +26,18 @@ Include the script in your page: (~8.5kb gzipped)
 
 ```html
 <script
-  async
+  defer
   type="module"
   src="https://unpkg.com/facade-script/dist/facade-script/facade-script.esm.js"
 ></script>
 <script
-  async
+  defer
   nomodule
   src="https://unpkg.com/facade-script/dist/facade-script/facade-script.js"
 ></script>
 ```
 
-☝️ Recommend using `async` for minimal impact on page load speed and because there's typically no hurry to fetch this script, but that's up to you.
+☝️ Recommend using `defer` for minimal impact on page load speed and because there's typically no hurry to fetch this script, but that's up to you.
 
 ## Step 2 of 2
 
