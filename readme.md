@@ -24,10 +24,16 @@ Loading can be triggered when you:
 
 Include the script in your page: (~8.5kb gzipped)
 
-```js
-<script async type="module" src="https://unpkg.com/facade-script/dist/facade-script/facade-script.esm.js"
+```html
+<script
+  async
+  type="module"
+  src="https://unpkg.com/facade-script/dist/facade-script/facade-script.esm.js"
 ></script>
-<script async nomodule src="https://unpkg.com/facade-script/dist/facade-script/facade-script.js"
+<script
+  async
+  nomodule
+  src="https://unpkg.com/facade-script/dist/facade-script/facade-script.js"
 ></script>
 ```
 
@@ -41,7 +47,7 @@ Then you simply use the facade-script tag instead of a standard script or iframe
 
 A `<script>` tag will only be added to the page when the user scrolls this into view.
 
-```js
+```html
 <facade-script src="https://path/to/a/script.js"></facade-script>
 ```
 
@@ -51,7 +57,7 @@ An `<iframe>` tag will only be added to the page when the user scrolls this into
 
 Recommended: For improved accessibility, supply a title attribute for the iframe too. See `props` below.
 
-```js
+```html
 <facade-script
   iframe
   src="https://www.youtube.com/embed/GTUruS-lnEo"
@@ -60,7 +66,7 @@ Recommended: For improved accessibility, supply a title attribute for the iframe
 
 ### To show a placeholder until the iframe embed has loaded:
 
-```js
+```html
 <facade-script iframe src="https://www.youtube.com/embed/GTUruS-lnEo">
   <p>Loading...</p>
 </facade-script>
@@ -72,7 +78,7 @@ Recommended: For improved accessibility, supply a title attribute for the iframe
 
 Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. Without this flag, every instance of this component will add the script to the page when triggered.
 
-```js
+```html
 <facade-script once src="https://path/to/a/script.js"></facade-script>
 ```
 
@@ -82,7 +88,7 @@ Use this to ensure a script is only loaded once on the page, even when there are
 
 By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
 
-```js
+```html
 <facade-script global once src="https://path/to/a/script.js"></facade-script>
 ```
 
@@ -96,7 +102,7 @@ When should the script be added to the page?
 - `lazy` - When this element is scrolled into view. (Default)
 - `click` - When this element is clicked.
 
-```js
+```html
 <facade-script
   iframe
   trigger="click"
@@ -112,7 +118,7 @@ When should the script be added to the page?
 
 After being triggered, delay n milliseconds before adding the script or iframe to the page.
 
-```js
+```html
 <facade-script
   iframe
   wait="2000"
