@@ -1,5 +1,5 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { PengScript } from '../facade-script';
+import { FacadeScript } from '../facade-script';
 
 describe.skip('facade-script for script added inline', () => {
   beforeAll(() => {
@@ -17,14 +17,14 @@ describe.skip('facade-script for script added inline', () => {
 
   it('should not render script when no attributes specified', async () => {
     const page = await newSpecPage({
-      components: [PengScript],
+      components: [FacadeScript],
       html: `<facade-script></facade-script>`,
     });
 
     expect(page.root).toEqualHtml(`
-      <facade-script status="idle">
-        <div class="facade-placeholder-content" data-script-status="idle"></div>
-        <div class="facade-scripted-content" data-script-status="idle" hidden></div>
+      <facade-script status="IDLE">
+        <div class="facade-placeholder-content" data-script-status="IDLE"></div>
+        <div class="facade-scripted-content" data-script-status="IDLE" hidden></div>
       </facade-script>
     `);
 
@@ -34,14 +34,14 @@ describe.skip('facade-script for script added inline', () => {
 
   it('should not render script when not triggered', async () => {
     const page = await newSpecPage({
-      components: [PengScript],
+      components: [FacadeScript],
       html: `<facade-script src="https://foo/bar.js"></facade-script>`,
     });
 
     expect(page.root).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" status="idle">
-        <div class="facade-placeholder-content" data-script-status="idle"></div>
-        <div class="facade-scripted-content" data-script-status="idle" hidden></div>
+      <facade-script src="https://foo/bar.js" status="IDLE">
+        <div class="facade-placeholder-content" data-script-status="IDLE"></div>
+        <div class="facade-scripted-content" data-script-status="IDLE" hidden></div>
       </facade-script>
     `);
 
@@ -51,20 +51,20 @@ describe.skip('facade-script for script added inline', () => {
 
   it('should render error attribute when triggered but src attribute is missing', async () => {
     const page = await newSpecPage({
-      components: [PengScript],
+      components: [FacadeScript],
       html: `<facade-script trigger="now"></facade-script>`,
     });
 
     expect(page.root).toEqualHtml(`
-      <facade-script trigger="now" status="idle" error="Script triggered but missing src">
-        <div class="facade-placeholder-content" data-script-status="idle"></div>
-        <div class="facade-scripted-content" data-script-status="idle" hidden></div>
+      <facade-script trigger="now" status="IDLE" error="Script triggered but missing src">
+        <div class="facade-placeholder-content" data-script-status="IDLE"></div>
+        <div class="facade-scripted-content" data-script-status="IDLE" hidden></div>
       </facade-script>
     `);
   });
 
   it('should render script tag when trigger="now"', async () => {
-    const page = await newSpecPage({ components: [PengScript] });
+    const page = await newSpecPage({ components: [FacadeScript] });
 
     const eventSpy = jest.fn();
     page.win.addEventListener('pengscript', eventSpy);
@@ -90,7 +90,7 @@ describe.skip('facade-script for script added inline', () => {
 
   it('should hide placeholder when trigger="now" and show-when="triggered"', async () => {
     const page = await newSpecPage({
-      components: [PengScript],
+      components: [FacadeScript],
       html: `<facade-script src="https://foo/bar.js" trigger="now" show-when="triggered"></facade-script>`,
     });
 
@@ -109,7 +109,7 @@ describe.skip('facade-script for script added inline', () => {
 
   it('should render script again for each instance of the component', async () => {
     const page = await newSpecPage({
-      components: [PengScript],
+      components: [FacadeScript],
       html: `
         <facade-script src="https://foo/bar.js" trigger="now"></facade-script>
         <facade-script src="https://foo/bar.js" trigger="now"></facade-script>
@@ -137,7 +137,7 @@ describe.skip('facade-script for script added inline', () => {
 
   it('should render one script tag when once=true', async () => {
     const page = await newSpecPage({
-      components: [PengScript],
+      components: [FacadeScript],
       html: `
         <facade-script src="https://foo/bar.js" trigger="now" once></facade-script>
         <facade-script src="https://foo/bar.js" trigger="now" once></facade-script>
@@ -170,7 +170,7 @@ describe.skip('facade-script for script added inline', () => {
 
   it('should render each unique script once when once=true', async () => {
     const page = await newSpecPage({
-      components: [PengScript],
+      components: [FacadeScript],
       html: `
         <facade-script src="https://foo/bar.js" trigger="now" once></facade-script>
         <facade-script src="https://foo/BAZ.js" trigger="now" once></facade-script>

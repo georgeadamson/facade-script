@@ -9,9 +9,9 @@ import { PengScriptEvent, PengScriptStatusName } from "./components/facade-scrip
 export namespace Components {
     interface FacadeScript {
         /**
-          * To expose error message for debugging etc:
+          * Readonly. Exposes any error message for debugging or as a hook for a CSS selector:
          */
-        "errorMessage": string;
+        "errorMsg": string;
         /**
           * By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
          */
@@ -25,7 +25,7 @@ export namespace Components {
          */
         "isOnce"?: boolean;
         /**
-          * Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
+          * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
          */
         "isReady"?: Function;
         /**
@@ -37,13 +37,13 @@ export namespace Components {
          */
         "showWhen"?: PengScriptStatusName;
         /**
-          * src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered.
+          * Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered.
          */
         "srcProd": string;
         /**
-          * To expose status message for debugging etc:
+          * Readonly: Expose the current status for debugging or as a hook for a CSS selector:
          */
-        "statusMessage": PengScriptStatusName;
+        "statusMsg": PengScriptStatusName;
         /**
           * Milliseconds to wait before discarding a slow loading script or iframe.
          */
@@ -72,9 +72,9 @@ declare global {
 declare namespace LocalJSX {
     interface FacadeScript {
         /**
-          * To expose error message for debugging etc:
+          * Readonly. Exposes any error message for debugging or as a hook for a CSS selector:
          */
-        "errorMessage"?: string;
+        "errorMsg"?: string;
         /**
           * By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
          */
@@ -88,7 +88,7 @@ declare namespace LocalJSX {
          */
         "isOnce"?: boolean;
         /**
-          * Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
+          * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
          */
         "isReady"?: Function;
         "onPengscript"?: (event: CustomEvent<PengScriptEvent>) => void;
@@ -101,13 +101,13 @@ declare namespace LocalJSX {
          */
         "showWhen"?: PengScriptStatusName;
         /**
-          * src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered.
+          * Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered.
          */
         "srcProd"?: string;
         /**
-          * To expose status message for debugging etc:
+          * Readonly: Expose the current status for debugging or as a hook for a CSS selector:
          */
-        "statusMessage"?: PengScriptStatusName;
+        "statusMsg"?: PengScriptStatusName;
         /**
           * Milliseconds to wait before discarding a slow loading script or iframe.
          */

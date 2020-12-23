@@ -1,6 +1,6 @@
 'use strict';
 
-const index = require('./index-9317d673.js');
+const index = require('./index-c0158ca9.js');
 
 /*
  Stencil Client Patch Browser v2.3.0 | MIT Licensed | https://stenciljs.com
@@ -102,5 +102,5 @@ const patchCloneNodeFix = (HTMLElementPrototype) => {
 };
 
 patchBrowser().then(options => {
-  return index.bootstrapLazy([["facade-script.cjs",[[1,"facade-script",{"srcProd":[1,"src"],"isIframe":[4,"iframe"],"isOnce":[4,"once"],"isGlobal":[4,"global"],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errorMessage":[513,"error"],"statusMessage":[513,"status"],"status":[32],"error":[32]}]]]], options);
+  return index.bootstrapLazy([["facade-script.cjs",[[4,"facade-script",{"srcProd":[1,"src"],"isIframe":[4,"iframe"],"isOnce":[4,"once"],"isGlobal":[4,"global"],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errorMsg":[513,"error"],"statusMsg":[513,"status"],"status":[32],"error":[32]}]]]], options);
 });

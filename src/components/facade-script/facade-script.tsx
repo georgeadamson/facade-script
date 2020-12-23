@@ -25,7 +25,7 @@ export type PengScriptEvent = {
   status: PengScriptStatusName;
   code: PengScriptStatusCode;
   error: PengScriptErrorCode;
-  errorMessage: string;
+  errorMsg: string;
   src: string;
   id?: string;
 }
@@ -63,7 +63,7 @@ const globalStatusCode: { [src: string]: PengScriptStatusCode } = {};
 @Component({
   tag: 'facade-script'
 })
-export class PengScript {
+export class FacadeScript {
   /** Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
   @Prop({ attribute: 'src' }) srcProd: string;
 
@@ -93,16 +93,16 @@ export class PengScript {
   /** Milliseconds to wait before discarding a slow loading script or iframe. */
   @Prop() timeout?: number;
 
-  /** Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
+  /** A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
   @Prop({ attribute: 'ready' }) isReady?: Function;
 
   /** Readonly. Exposes any error message for debugging or as a hook for a CSS selector: */
-  @Prop({ reflect: true, attribute: 'error' }) errorMessage: string;
+  @Prop({ reflect: true, attribute: 'error' }) errorMsg: string;
 
   /** Readonly: Expose the current status for debugging or as a hook for a CSS selector: */
-  @Prop({ reflect: true, attribute: 'status' }) statusMessage: PengScriptStatusName = 'IDLE';
+  @Prop({ reflect: true, attribute: 'status' }) statusMsg: PengScriptStatusName = 'IDLE';
 
-  // This is an internal reference to this webcomponent element. Needed for IntersectionObserver.
+  // This is an internal reference to this Custom Element. Needed for IntersectionObserver.
   @Element() private host: HTMLElement;
 
   // Local script load state:
@@ -112,7 +112,7 @@ export class PengScript {
   // Update error attribute whenever error happens:
   @Watch('error')
   onError(code: PengScriptErrorCode) {
-    this.errorMessage = ERROR_MESSAGE[code];
+    this.errorMsg = ERROR_MESSAGE[code];
   }
 
   // EMIT EVENT whenever status changes:
@@ -120,16 +120,16 @@ export class PengScript {
   onStatus(code: PengScriptStatusCode, oldCode: PengScriptStatusCode) {
     if (code === oldCode) return;
 
-    const { wait, error, errorMessage, isOnce, src, timeoutId, host } = this;
+    const { error, errorMsg, isOnce, src, timeoutId, host } = this;
 
-    const detail = {
-      code,
-      status: STATUS_NAME[code],
-      wait,
-      timeoutId,
-      src
-    }
-    console.info('PengScript:', JSON.stringify(detail));
+    // const detail = {
+    //   code,
+    //   status: STATUS_NAME[code],
+    //   wait,
+    //   timeoutId,
+    //   src
+    // }
+    // console.info('PengScript:', JSON.stringify(detail));
 
     if (timeoutId && code >= STATUS.READY) {
       clearTimeout(timeoutId);
@@ -140,8 +140,8 @@ export class PengScript {
       globalStatusCode[src] = code;
     }
 
-    const errorDetail: PengScriptEvent = { status: STATUS_NAME[code], code, error, errorMessage, id: host.id, src };
-    this.statusMessage = STATUS_NAME[code];
+    const errorDetail: PengScriptEvent = { status: STATUS_NAME[code], code, error, errorMsg, id: host.id, src };
+    this.statusMsg = STATUS_NAME[code];
     this.pengscript.emit(errorDetail);
   }
 
@@ -160,7 +160,7 @@ export class PengScript {
   }
 
   componentDidLoad() {
-    const { trigger, onTrigger, src, host } = this;
+    const { trigger, isOnce, onTrigger, src, host } = this;
     let handler: Function;
 
     // Do we need to do anything immediately?
@@ -191,7 +191,7 @@ export class PengScript {
     }
 
     // Detect whether script tag is already in the page:
-    if (this.isOnce && isScriptOnPage(src)) {
+    if (isOnce && isScriptOnPage(src)) {
       if (statusOfGlobalScript(src) < STATUS.LOADING) {
         globalStatusCode[src] = STATUS.LOADING;
       }
@@ -201,7 +201,7 @@ export class PengScript {
 
   // This is called when we decide to load the script:
   private onTrigger = () => {
-    const { isGlobal, isIframe, wait, src, props, onLoad, timeout } = this;
+    const { isOnce, isGlobal, isIframe, wait, src, props, onLoad, timeout } = this;
 
     // Update status (and thereby emit event to inform any listeners)
     this.status = STATUS.TRIGGERED;
@@ -215,7 +215,7 @@ export class PengScript {
     }
 
     // Bail out now if already loading:
-    if (this.isOnce && isScriptOnPage(src)) {
+    if (isOnce && isScriptOnPage(src)) {
       if (statusOfGlobalScript(src) < STATUS.LOADING) {
         globalStatusCode[src] = STATUS.LOADING;
       }
@@ -229,11 +229,11 @@ export class PengScript {
       if (
         isGlobal &&
         // this.status < STATUS.LOADING &&
-        !(this.isOnce && isScriptOnPage(src))
+        !(isOnce && isScriptOnPage(src))
       ) {
         createElement(
           isIframe ? 'iframe' : 'script',
-          { src, onload: onLoad, ...parseJSON(props) },
+          { src, onLoad, ...parseJSON(props) },
           document.head
         );
       } else {
@@ -271,6 +271,7 @@ export class PengScript {
       const { src, isOnce, isReady, timeout, timeoutId } = this;
 
       clearTimeout(timeoutId);
+
       if (isOnce) globalStatusCode[src] = STATUS.LOADED;
       this.status = STATUS.LOADED;
 
@@ -290,7 +291,7 @@ export class PengScript {
       onLoad,
       showWhen,
       status,
-      statusMessage,
+      statusMsg,
       isOnce,
     } = this;
     let script;
@@ -318,7 +319,7 @@ export class PengScript {
     return (
       <Host {...hostProps}>
         <div
-          data-script-status={statusMessage}
+          data-script-status={statusMsg}
           class="facade-placeholder-content"
           hidden={hidePlaceholder}
         >
@@ -326,7 +327,7 @@ export class PengScript {
         </div>
 
         <div
-          data-script-status={statusMessage}
+          data-script-status={statusMsg}
           class="facade-scripted-content"
           hidden={!hidePlaceholder}
         >

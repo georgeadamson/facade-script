@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-9317d673.js');
+const index = require('./index-c0158ca9.js');
 
 const ERROR_MESSAGE = {
   1: 'Script triggered but missing src',
@@ -29,7 +29,7 @@ for (const key in STATUS)
 // When a script must only ever be loaded isOnce, we use this to track whether it's on the page already.
 // Note that it is a map so we can track different script src urls.
 const globalStatusCode = {};
-const PengScript = class {
+const FacadeScript = class {
   constructor(hostRef) {
     index.registerInstance(this, hostRef);
     this.pengscript = index.createEvent(this, "pengscript", 7);
@@ -43,13 +43,13 @@ const PengScript = class {
     this.wait = 0;
     /** Fine tune when an iframe will be shown. Defaults to wait until is has loaded. */
     this.showWhen = 'LOADED';
-    /** To expose status message for debugging etc: */
-    this.statusMessage = STATUS_NAME[STATUS.IDLE];
+    /** Readonly: Expose the current status for debugging or as a hook for a CSS selector: */
+    this.statusMsg = 'IDLE';
     // Local script load state:
     this.status = 0;
     // This is called when we decide to load the script:
     this.onTrigger = () => {
-      const { isGlobal, isIframe, wait, src, props, onLoad, timeout } = this;
+      const { isOnce, isGlobal, isIframe, wait, src, props, onLoad, timeout } = this;
       // Update status (and thereby emit event to inform any listeners)
       this.status = STATUS.TRIGGERED;
       if (!src) {
@@ -61,7 +61,7 @@ const PengScript = class {
         this.error = undefined;
       }
       // Bail out now if already loading:
-      if (this.isOnce && isScriptOnPage(src)) {
+      if (isOnce && isScriptOnPage(src)) {
         if (statusOfGlobalScript(src) < STATUS.LOADING) {
           globalStatusCode[src] = STATUS.LOADING;
         }
@@ -73,8 +73,8 @@ const PengScript = class {
         // Add script to the <head> if not already running:
         if (isGlobal &&
           // this.status < STATUS.LOADING &&
-          !(this.isOnce && isScriptOnPage(src))) {
-          createElement(isIframe ? 'iframe' : 'script', Object.assign({ src, onload: onLoad }, parseJSON(props)), document.head);
+          !(isOnce && isScriptOnPage(src))) {
+          createElement(isIframe ? 'iframe' : 'script', Object.assign({ src, onLoad }, parseJSON(props)), document.head);
         }
         // Update status:
         this.status = globalStatusCode[src] = STATUS.LOADING;
@@ -96,6 +96,7 @@ const PengScript = class {
         initScriptLoad();
       }
     };
+    // Handler triggered by the load event of the script or iframe:
     this.onLoad = () => {
       if (this.status !== STATUS.TIMEOUT) {
         const { src, isOnce, isReady, timeout, timeoutId } = this;
@@ -111,21 +112,21 @@ const PengScript = class {
   }
   // Update error attribute whenever error happens:
   onError(code) {
-    this.errorMessage = ERROR_MESSAGE[code];
+    this.errorMsg = ERROR_MESSAGE[code];
   }
   // EMIT EVENT whenever status changes:
   onStatus(code, oldCode) {
     if (code === oldCode)
       return;
-    const { wait, error, errorMessage, isOnce, src, timeoutId, host } = this;
-    const detail = {
-      code,
-      status: STATUS_NAME[code],
-      wait,
-      timeoutId,
-      src
-    };
-    console.info('PengScript:', JSON.stringify(detail));
+    const { error, errorMsg, isOnce, src, timeoutId, host } = this;
+    // const detail = {
+    //   code,
+    //   status: STATUS_NAME[code],
+    //   wait,
+    //   timeoutId,
+    //   src
+    // }
+    // console.info('PengScript:', JSON.stringify(detail));
     if (timeoutId && code >= STATUS.READY) {
       clearTimeout(timeoutId);
     }
@@ -133,8 +134,8 @@ const PengScript = class {
     if (isOnce && code >= STATUS.LOADING && code > statusOfGlobalScript(src)) {
       globalStatusCode[src] = code;
     }
-    const errorDetail = { status: STATUS_NAME[code], code, error, errorMessage, id: host.id, src };
-    this.statusMessage = STATUS_NAME[code];
+    const errorDetail = { status: STATUS_NAME[code], code, error, errorMsg, id: host.id, src };
+    this.statusMsg = STATUS_NAME[code];
     this.pengscript.emit(errorDetail);
   }
   componentWillLoad() {
@@ -142,7 +143,7 @@ const PengScript = class {
     this.src = this.srcProd;
   }
   componentDidLoad() {
-    const { trigger, onTrigger, src, host } = this;
+    const { trigger, isOnce, onTrigger, src, host } = this;
     let handler;
     // Do we need to do anything immediately?
     switch (true) {
@@ -167,7 +168,7 @@ const PengScript = class {
       handler(onTrigger);
     }
     // Detect whether script tag is already in the page:
-    if (this.isOnce && isScriptOnPage(src)) {
+    if (isOnce && isScriptOnPage(src)) {
       if (statusOfGlobalScript(src) < STATUS.LOADING) {
         globalStatusCode[src] = STATUS.LOADING;
       }
@@ -175,7 +176,7 @@ const PengScript = class {
     }
   }
   render() {
-    const { isIframe, src, isGlobal, props, trigger, onLoad, showWhen, status, statusMessage, isOnce, } = this;
+    const { isIframe, src, isGlobal, props, trigger, onLoad, showWhen, status, statusMsg, isOnce, } = this;
     let script;
     // Decide when to swap out default placeholder when script loads:
     const showWhenStatus = STATUS[String(showWhen).toUpperCase()] || STATUS.LOADED;
@@ -191,7 +192,7 @@ const PengScript = class {
     };
     // Decide whether to show either the placeholder or the result of the script:
     const hidePlaceholder = status >= showWhenStatus && status !== STATUS.TIMEOUT;
-    return (index.h(index.Host, Object.assign({}, hostProps), index.h("div", { "data-script-status": statusMessage, class: "facade-placeholder-content", hidden: hidePlaceholder }, index.h("slot", null)), index.h("div", { "data-script-status": statusMessage, class: "facade-scripted-content", hidden: !hidePlaceholder }, script)));
+    return (index.h(index.Host, Object.assign({}, hostProps), index.h("div", { "data-script-status": statusMsg, class: "facade-placeholder-content", hidden: hidePlaceholder }, index.h("slot", null)), index.h("div", { "data-script-status": statusMsg, class: "facade-scripted-content", hidden: !hidePlaceholder }, script)));
   }
   get host() { return index.getElement(this); }
   static get watchers() { return {
@@ -263,13 +264,13 @@ async function awaitScriptReady(test, timeout, interval = 200) {
       }
     }, parseInt(interval) || 200);
     // Define a timeout too: (Recommended)
-    if (parseInt(timeout)) {
+    if (timeout) {
       timeoutId = setTimeout(() => {
         clearInterval(intervalId);
         reject('timeout');
-      }, parseInt(timeout));
+      }, parseInt(timeout) || 30000);
     }
   });
 }
 
-exports.facade_script = PengScript;
+exports.facade_script = FacadeScript;

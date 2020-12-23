@@ -5,13 +5,13 @@ export declare type PengScriptEvent = {
   status: PengScriptStatusName;
   code: PengScriptStatusCode;
   error: PengScriptErrorCode;
-  errorMessage: string;
+  errorMsg: string;
   src: string;
   id?: string;
 };
 export declare type PengScriptErrorCode = 1;
-export declare class PengScript {
-  /** src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
+export declare class FacadeScript {
+  /** Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
   srcProd: string;
   /** By default a script tag will be rendered. Use this option to render an iframe instead. */
   isIframe?: boolean;
@@ -29,15 +29,15 @@ export declare class PengScript {
   showWhen?: PengScriptStatusName;
   /** Milliseconds to wait before discarding a slow loading script or iframe. */
   timeout?: number;
-  /** Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
+  /** A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
   isReady?: Function;
-  /** To expose error message for debugging etc: */
-  errorMessage: string;
-  /** To expose status message for debugging etc: */
-  statusMessage: PengScriptStatusName;
+  /** Readonly. Exposes any error message for debugging or as a hook for a CSS selector: */
+  errorMsg: string;
+  /** Readonly: Expose the current status for debugging or as a hook for a CSS selector: */
+  statusMsg: PengScriptStatusName;
   private host;
-  status: PengScriptStatusCode;
-  error: PengScriptErrorCode;
+  private status;
+  private error;
   onError(code: PengScriptErrorCode): void;
   onStatus(code: PengScriptStatusCode, oldCode: PengScriptStatusCode): void;
   pengscript: EventEmitter<PengScriptEvent>;

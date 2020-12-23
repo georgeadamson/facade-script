@@ -24,7 +24,7 @@ for (const key in STATUS)
 // When a script must only ever be loaded isOnce, we use this to track whether it's on the page already.
 // Note that it is a map so we can track different script src urls.
 const globalStatusCode = {};
-export class PengScript {
+export class FacadeScript {
   constructor() {
     /** Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. */
     this.isOnce = false;
@@ -36,13 +36,13 @@ export class PengScript {
     this.wait = 0;
     /** Fine tune when an iframe will be shown. Defaults to wait until is has loaded. */
     this.showWhen = 'LOADED';
-    /** To expose status message for debugging etc: */
-    this.statusMessage = STATUS_NAME[STATUS.IDLE];
+    /** Readonly: Expose the current status for debugging or as a hook for a CSS selector: */
+    this.statusMsg = 'IDLE';
     // Local script load state:
     this.status = 0;
     // This is called when we decide to load the script:
     this.onTrigger = () => {
-      const { isGlobal, isIframe, wait, src, props, onLoad, timeout } = this;
+      const { isOnce, isGlobal, isIframe, wait, src, props, onLoad, timeout } = this;
       // Update status (and thereby emit event to inform any listeners)
       this.status = STATUS.TRIGGERED;
       if (!src) {
@@ -54,7 +54,7 @@ export class PengScript {
         this.error = undefined;
       }
       // Bail out now if already loading:
-      if (this.isOnce && isScriptOnPage(src)) {
+      if (isOnce && isScriptOnPage(src)) {
         if (statusOfGlobalScript(src) < STATUS.LOADING) {
           globalStatusCode[src] = STATUS.LOADING;
         }
@@ -66,8 +66,8 @@ export class PengScript {
         // Add script to the <head> if not already running:
         if (isGlobal &&
           // this.status < STATUS.LOADING &&
-          !(this.isOnce && isScriptOnPage(src))) {
-          createElement(isIframe ? 'iframe' : 'script', Object.assign({ src, onload: onLoad }, parseJSON(props)), document.head);
+          !(isOnce && isScriptOnPage(src))) {
+          createElement(isIframe ? 'iframe' : 'script', Object.assign({ src, onLoad }, parseJSON(props)), document.head);
         }
         else {
           // The render method will render the script or iframe because status >= TRIGGERED
@@ -92,6 +92,7 @@ export class PengScript {
         initScriptLoad();
       }
     };
+    // Handler triggered by the load event of the script or iframe:
     this.onLoad = () => {
       if (this.status !== STATUS.TIMEOUT) {
         const { src, isOnce, isReady, timeout, timeoutId } = this;
@@ -107,21 +108,21 @@ export class PengScript {
   }
   // Update error attribute whenever error happens:
   onError(code) {
-    this.errorMessage = ERROR_MESSAGE[code];
+    this.errorMsg = ERROR_MESSAGE[code];
   }
   // EMIT EVENT whenever status changes:
   onStatus(code, oldCode) {
     if (code === oldCode)
       return;
-    const { wait, error, errorMessage, isOnce, src, timeoutId, host } = this;
-    const detail = {
-      code,
-      status: STATUS_NAME[code],
-      wait,
-      timeoutId,
-      src
-    };
-    console.info('PengScript:', JSON.stringify(detail));
+    const { error, errorMsg, isOnce, src, timeoutId, host } = this;
+    // const detail = {
+    //   code,
+    //   status: STATUS_NAME[code],
+    //   wait,
+    //   timeoutId,
+    //   src
+    // }
+    // console.info('PengScript:', JSON.stringify(detail));
     if (timeoutId && code >= STATUS.READY) {
       clearTimeout(timeoutId);
     }
@@ -129,8 +130,8 @@ export class PengScript {
     if (isOnce && code >= STATUS.LOADING && code > statusOfGlobalScript(src)) {
       globalStatusCode[src] = code;
     }
-    const errorDetail = { status: STATUS_NAME[code], code, error, errorMessage, id: host.id, src };
-    this.statusMessage = STATUS_NAME[code];
+    const errorDetail = { status: STATUS_NAME[code], code, error, errorMsg, id: host.id, src };
+    this.statusMsg = STATUS_NAME[code];
     this.pengscript.emit(errorDetail);
   }
   componentWillLoad() {
@@ -138,7 +139,7 @@ export class PengScript {
     this.src = this.srcProd;
   }
   componentDidLoad() {
-    const { trigger, onTrigger, src, host } = this;
+    const { trigger, isOnce, onTrigger, src, host } = this;
     let handler;
     // Do we need to do anything immediately?
     switch (true) {
@@ -163,7 +164,7 @@ export class PengScript {
       handler(onTrigger);
     }
     // Detect whether script tag is already in the page:
-    if (this.isOnce && isScriptOnPage(src)) {
+    if (isOnce && isScriptOnPage(src)) {
       if (statusOfGlobalScript(src) < STATUS.LOADING) {
         globalStatusCode[src] = STATUS.LOADING;
       }
@@ -171,7 +172,7 @@ export class PengScript {
     }
   }
   render() {
-    const { isIframe, src, isGlobal, props, trigger, onLoad, showWhen, status, statusMessage, isOnce, } = this;
+    const { isIframe, src, isGlobal, props, trigger, onLoad, showWhen, status, statusMsg, isOnce, } = this;
     let script;
     // Decide when to swap out default placeholder when script loads:
     const showWhenStatus = STATUS[String(showWhen).toUpperCase()] || STATUS.LOADED;
@@ -188,12 +189,11 @@ export class PengScript {
     // Decide whether to show either the placeholder or the result of the script:
     const hidePlaceholder = status >= showWhenStatus && status !== STATUS.TIMEOUT;
     return (h(Host, Object.assign({}, hostProps),
-      h("div", { "data-script-status": statusMessage, class: "facade-placeholder-content", hidden: hidePlaceholder },
+      h("div", { "data-script-status": statusMsg, class: "facade-placeholder-content", hidden: hidePlaceholder },
         h("slot", null)),
-      h("div", { "data-script-status": statusMessage, class: "facade-scripted-content", hidden: !hidePlaceholder }, script)));
+      h("div", { "data-script-status": statusMsg, class: "facade-scripted-content", hidden: !hidePlaceholder }, script)));
   }
   static get is() { return "facade-script"; }
-  static get encapsulation() { return "shadow"; }
   static get properties() { return {
     "srcProd": {
       "type": "string",
@@ -207,7 +207,7 @@ export class PengScript {
       "optional": false,
       "docs": {
         "tags": [],
-        "text": "src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered."
+        "text": "Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered."
       },
       "attribute": "src",
       "reflect": false
@@ -377,10 +377,10 @@ export class PengScript {
       "optional": true,
       "docs": {
         "tags": [],
-        "text": "Supply a function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads."
+        "text": "A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads."
       }
     },
-    "errorMessage": {
+    "errorMsg": {
       "type": "string",
       "mutable": false,
       "complexType": {
@@ -392,12 +392,12 @@ export class PengScript {
       "optional": false,
       "docs": {
         "tags": [],
-        "text": "To expose error message for debugging etc:"
+        "text": "Readonly. Exposes any error message for debugging or as a hook for a CSS selector:"
       },
       "attribute": "error",
       "reflect": true
     },
-    "statusMessage": {
+    "statusMsg": {
       "type": "string",
       "mutable": false,
       "complexType": {
@@ -413,11 +413,11 @@ export class PengScript {
       "optional": false,
       "docs": {
         "tags": [],
-        "text": "To expose status message for debugging etc:"
+        "text": "Readonly: Expose the current status for debugging or as a hook for a CSS selector:"
       },
       "attribute": "status",
       "reflect": true,
-      "defaultValue": "STATUS_NAME[STATUS.IDLE]"
+      "defaultValue": "'IDLE'"
     }
   }; }
   static get states() { return {
@@ -436,7 +436,7 @@ export class PengScript {
       },
       "complexType": {
         "original": "PengScriptEvent",
-        "resolved": "{ status: PengScriptStatusName; code: PengScriptStatusCode; error: 1; errorMessage: string; src: string; id?: string; }",
+        "resolved": "{ status: PengScriptStatusName; code: PengScriptStatusCode; error: 1; errorMsg: string; src: string; id?: string; }",
         "references": {
           "PengScriptEvent": {
             "location": "local"
@@ -517,11 +517,11 @@ async function awaitScriptReady(test, timeout, interval = 200) {
       }
     }, parseInt(interval) || 200);
     // Define a timeout too: (Recommended)
-    if (parseInt(timeout)) {
+    if (timeout) {
       timeoutId = setTimeout(() => {
         clearInterval(intervalId);
         reject('timeout');
-      }, parseInt(timeout));
+      }, parseInt(timeout) || 30000);
     }
   });
 }

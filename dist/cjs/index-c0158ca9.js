@@ -1,6 +1,27 @@
+'use strict';
+
+function _interopNamespace(e) {
+  if (e && e.__esModule) return e;
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () {
+            return e[k];
+          }
+        });
+      }
+    });
+  }
+  n['default'] = e;
+  return Object.freeze(n);
+}
+
 const NAMESPACE = 'facade-script';
 
-let scopeId;
 let contentRef;
 let hostTagName;
 let useNativeShadowDom = false;
@@ -22,7 +43,6 @@ const plt = {
     rel: (el, eventName, listener, opts) => el.removeEventListener(eventName, listener, opts),
     ce: (eventName, opts) => new CustomEvent(eventName, opts),
 };
-const supportsShadow =  /*@__PURE__*/ (() => (doc.head.attachShadow + '').indexOf('[native') > -1)() ;
 const promiseResolve = (v) => Promise.resolve(v);
 const HYDRATED_CSS = '{visibility:hidden}.hydrated{visibility:inherit}';
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
@@ -48,7 +68,6 @@ const uniqueTime = (key, measureText) => {
  * Don't add values to these!!
  */
 const EMPTY_OBJ = {};
-const isDef = (v) => v != null;
 const isComplexType = (o) => {
     // https://jsperf.com/typeof-fn-object/5
     o = typeof o;
@@ -363,10 +382,6 @@ const createElm = (oldParentVNode, newParentVNode, childIndex, parentElm) => {
         // remember for later we need to check to relocate nodes
         checkSlotRelocate = true;
         if (newVNode.$tag$ === 'slot') {
-            if (scopeId) {
-                // scoped css needs to add its scoped id to the parent element
-                parentElm.classList.add(scopeId + '-s');
-            }
             newVNode.$flags$ |= newVNode.$children$
                 ? // slot element has fallback content
                     2 /* isSlotFallback */
@@ -389,15 +404,10 @@ const createElm = (oldParentVNode, newParentVNode, childIndex, parentElm) => {
         {
             updateElement(null, newVNode, isSvgMode);
         }
-        if ( isDef(scopeId) && elm['s-si'] !== scopeId) {
-            // if there is a scopeId and this is the initial render
-            // then let's add the scopeId as a css class
-            elm.classList.add((elm['s-si'] = scopeId));
-        }
         if (newVNode.$children$) {
             for (i = 0; i < newVNode.$children$.length; ++i) {
                 // create the node
-                childNode = createElm(oldParentVNode, newVNode, i, elm);
+                childNode = createElm(oldParentVNode, newVNode, i);
                 // return node could have been null
                 if (childNode) {
                     // append our new node
@@ -453,12 +463,9 @@ const putBackInOriginalLocation = (parentElm, recursive) => {
 const addVnodes = (parentElm, before, parentVNode, vnodes, startIdx, endIdx) => {
     let containerElm = (( parentElm['s-cr'] && parentElm['s-cr'].parentNode) || parentElm);
     let childNode;
-    if ( containerElm.shadowRoot && containerElm.tagName === hostTagName) {
-        containerElm = containerElm.shadowRoot;
-    }
     for (; startIdx <= endIdx; ++startIdx) {
         if (vnodes[startIdx]) {
-            childNode = createElm(null, parentVNode, startIdx, parentElm);
+            childNode = createElm(null, parentVNode, startIdx);
             if (childNode) {
                 vnodes[startIdx].$elm$ = childNode;
                 containerElm.insertBefore(childNode,  referenceNode(before) );
@@ -561,7 +568,7 @@ const updateChildren = (parentElm, oldCh, newVNode, newCh) => {
             if ( idxInOld >= 0) {
                 elmToMove = oldCh[idxInOld];
                 if (elmToMove.$tag$ !== newStartVnode.$tag$) {
-                    node = createElm(oldCh && oldCh[newStartIdx], newVNode, idxInOld, parentElm);
+                    node = createElm(oldCh && oldCh[newStartIdx], newVNode, idxInOld);
                 }
                 else {
                     patch(elmToMove, newStartVnode);
@@ -572,7 +579,7 @@ const updateChildren = (parentElm, oldCh, newVNode, newCh) => {
             }
             else {
                 // new element
-                node = createElm(oldCh && oldCh[newStartIdx], newVNode, newStartIdx, parentElm);
+                node = createElm(oldCh && oldCh[newStartIdx], newVNode, newStartIdx);
                 newStartVnode = newCh[++newStartIdx];
             }
             if (node) {
@@ -809,13 +816,10 @@ const renderVdom = (hostRef, renderFnResults) => {
     rootVnode.$tag$ = null;
     rootVnode.$flags$ |= 4 /* isHost */;
     hostRef.$vnode$ = rootVnode;
-    rootVnode.$elm$ = oldVNode.$elm$ = ( hostElm.shadowRoot || hostElm );
-    {
-        scopeId = hostElm['s-sc'];
-    }
+    rootVnode.$elm$ = oldVNode.$elm$ = ( hostElm);
     {
         contentRef = hostElm['s-cr'];
-        useNativeShadowDom = supportsShadow && (cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */) !== 0;
+        useNativeShadowDom =  (cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */) !== 0;
         // always reset
         checkSlotFallbackVisibility = false;
     }
@@ -1324,9 +1328,8 @@ const patchCloneNode = (HostElementPrototype) => {
     const orgCloneNode = HostElementPrototype.cloneNode;
     HostElementPrototype.cloneNode = function (deep) {
         const srcNode = this;
-        const isShadowDom =  srcNode.shadowRoot && supportsShadow ;
-        const clonedNode = orgCloneNode.call(srcNode, isShadowDom ? deep : false);
-        if ( !isShadowDom && deep) {
+        const clonedNode = orgCloneNode.call(srcNode,  false);
+        if ( deep) {
             let i = 0;
             let slotted, nonStencilNode;
             let stencilPrivates = ['s-id', 's-cr', 's-lr', 's-rc', 's-sc', 's-p', 's-cn', 's-sr', 's-sn', 's-hn', 's-ol', 's-nr', 's-si'];
@@ -1450,9 +1453,6 @@ const bootstrapLazy = (lazyBundles, options = {}) => {
         {
             cmpMeta.$watchers$ = {};
         }
-        if ( !supportsShadow && cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */) {
-            cmpMeta.$flags$ |= 8 /* needsShadowDomShim */;
-        }
         const tagName =  cmpMeta.$tagName$;
         const HostElement = class extends HTMLElement {
             // StencilLazyHost
@@ -1461,20 +1461,6 @@ const bootstrapLazy = (lazyBundles, options = {}) => {
                 super(self);
                 self = this;
                 registerHost(self, cmpMeta);
-                if ( cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */) {
-                    // this component is using shadow dom
-                    // and this browser supports shadow dom
-                    // add the read-only property "shadowRoot" to the host element
-                    // adding the shadow root build conditionals to minimize runtime
-                    if (supportsShadow) {
-                        {
-                            self.attachShadow({ mode: 'open' });
-                        }
-                    }
-                    else if ( !('shadowRoot' in self)) {
-                        self.shadowRoot = self;
-                    }
-                }
                 {
                     patchChildSlotNodes(self, cmpMeta);
                 }
@@ -1557,11 +1543,11 @@ const loadModule = (cmpMeta, hostRef, hmrVersionId) => {
     if (module) {
         return module[exportName];
     }
-    return import(
+    return Promise.resolve().then(function () { return /*#__PURE__*/_interopNamespace(require(
     /* webpackInclude: /\.entry\.js$/ */
     /* webpackExclude: /\.system\.entry\.js$/ */
     /* webpackMode: "lazy" */
-    `./${bundleId}.entry.js${ ''}`).then(importedModule => {
+    `./${bundleId}.entry.js${ ''}`)); }).then(importedModule => {
         {
             cmpModules.set(bundleId, importedModule);
         }
@@ -1611,4 +1597,16 @@ const flush = () => {
 const nextTick = /*@__PURE__*/ (cb) => promiseResolve().then(cb);
 const writeTask = /*@__PURE__*/ queueTask(queueDomWrites, true);
 
-export { CSS as C, H, NAMESPACE as N, promiseResolve as a, bootstrapLazy as b, createEvent as c, doc as d, Host as e, getElement as g, h, plt as p, registerInstance as r, win as w };
+exports.CSS = CSS;
+exports.H = H;
+exports.Host = Host;
+exports.NAMESPACE = NAMESPACE;
+exports.bootstrapLazy = bootstrapLazy;
+exports.createEvent = createEvent;
+exports.doc = doc;
+exports.getElement = getElement;
+exports.h = h;
+exports.plt = plt;
+exports.promiseResolve = promiseResolve;
+exports.registerInstance = registerInstance;
+exports.win = win;
