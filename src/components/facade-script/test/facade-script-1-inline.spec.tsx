@@ -1,7 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { FacadeScript } from '../facade-script';
 
-describe.skip('facade-script for script added inline', () => {
+describe.only('facade-script for script added inline', () => {
   beforeAll(() => {
     // Mock IntersectionObserver because it is not available in test environment
     const mockIntersectionObserver = jest.fn();
@@ -23,8 +23,7 @@ describe.skip('facade-script for script added inline', () => {
 
     expect(page.root).toEqualHtml(`
       <facade-script status="IDLE">
-        <div class="facade-placeholder-content" data-script-status="IDLE"></div>
-        <div class="facade-scripted-content" data-script-status="IDLE" hidden></div>
+        <div class="facade-script-placeholder"></div>
       </facade-script>
     `);
 
@@ -40,8 +39,7 @@ describe.skip('facade-script for script added inline', () => {
 
     expect(page.root).toEqualHtml(`
       <facade-script src="https://foo/bar.js" status="IDLE">
-        <div class="facade-placeholder-content" data-script-status="IDLE"></div>
-        <div class="facade-scripted-content" data-script-status="IDLE" hidden></div>
+        <div class="facade-script-placeholder"></div>
       </facade-script>
     `);
 
@@ -57,8 +55,7 @@ describe.skip('facade-script for script added inline', () => {
 
     expect(page.root).toEqualHtml(`
       <facade-script trigger="now" status="IDLE" error="Script triggered but missing src">
-        <div class="facade-placeholder-content" data-script-status="IDLE"></div>
-        <div class="facade-scripted-content" data-script-status="IDLE" hidden></div>
+        <div class="facade-script-placeholder"></div>
       </facade-script>
     `);
   });
@@ -74,11 +71,11 @@ describe.skip('facade-script for script added inline', () => {
     );
 
     expect(page.root).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
+      <facade-script src="https://foo/bar.js" trigger="now" status="LOADING">
+        <div class="facade-script-placeholder"></div>
+        
           <script src="https://foo/bar.js"></script>
-        </div>
+    
       </facade-script>
     `);
 
@@ -95,11 +92,11 @@ describe.skip('facade-script for script added inline', () => {
     });
 
     expect(page.root).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" show-when="triggered" status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading" hidden></div>
-        <div class="facade-scripted-content" data-script-status="loading">
+      <facade-script src="https://foo/bar.js" trigger="now" show-when="triggered" status="LOADING">
+        <div class="facade-script-placeholder" hidden></div>
+
           <script src="https://foo/bar.js"></script>
-        </div>
+   
       </facade-script>
     `);
 
@@ -117,17 +114,17 @@ describe.skip('facade-script for script added inline', () => {
     });
 
     expect(page.body).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
+      <facade-script src="https://foo/bar.js" trigger="now" status="LOADING">
+        <div class="facade-script-placeholder"></div>
+        
           <script src="https://foo/bar.js"></script>
-        </div>
+     
       </facade-script>
-      <facade-script src="https://foo/bar.js" trigger="now" status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
+      <facade-script src="https://foo/bar.js" trigger="now" status="LOADING">
+        <div class="facade-script-placeholder"></div>
+        
           <script src="https://foo/bar.js"></script>
-        </div>
+      
       </facade-script>
     `);
 
@@ -146,21 +143,15 @@ describe.skip('facade-script for script added inline', () => {
     });
 
     expect(page.body).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" once status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
-          <script src="https://foo/bar.js"></script>
-        </div>
+      <facade-script src="https://foo/bar.js" trigger="now" once status="LOADING">
+        <div class="facade-script-placeholder"></div>
+        <script src="https://foo/bar.js"></script>
       </facade-script>
-      <facade-script src="https://foo/bar.js" trigger="now" once status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
-        </div>
+      <facade-script src="https://foo/bar.js" trigger="now" once status="LOADING">
+        <div class="facade-script-placeholder"></div>
       </facade-script>
-      <facade-script src="https://foo/bar.js" trigger="now" once status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
-        </div>
+      <facade-script src="https://foo/bar.js" trigger="now" once status="LOADING">
+        <div class="facade-script-placeholder"></div>
       </facade-script>
     `);
 
@@ -168,7 +159,7 @@ describe.skip('facade-script for script added inline', () => {
     expect(page.doc.querySelectorAll('script[src]').length).toEqual(1);
   });
 
-  it('should render each unique script once when once=true', async () => {
+  it.only('should render each unique script once when once=true', async () => {
     const page = await newSpecPage({
       components: [FacadeScript],
       html: `
@@ -178,17 +169,13 @@ describe.skip('facade-script for script added inline', () => {
     });
 
     expect(page.body).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" once status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
-          <script src="https://foo/bar.js"></script>
-        </div>
+      <facade-script src="https://foo/bar.js" trigger="now" once status="LOADING">
+        <div class="facade-script-placeholder"></div>
+        <script src="https://foo/bar.js"></script>
       </facade-script>
-      </facade-script>
-      <facade-script src="https://foo/BAZ.js" trigger="now" once status="loading">
-        <div class="facade-placeholder-content" data-script-status="loading"></div>
-        <div class="facade-scripted-content" data-script-status="loading" hidden>
-        </div>
+      <facade-script src="https://foo/BAZ.js" trigger="now" once status="LOADING">
+        <div class="facade-script-placeholder"></div>
+        <script src="https://foo/BAZ.js"></script>
       </facade-script>
     `);
 

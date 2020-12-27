@@ -9,25 +9,29 @@ import { PengScriptEvent, PengScriptStatusName } from "./components/facade-scrip
 export namespace Components {
     interface FacadeScript {
         /**
+          * Optionally output debug info to the console whenever the component changes state
+         */
+        "debug"?: boolean;
+        /**
           * Readonly. Exposes any error message for debugging or as a hook for a CSS selector:
          */
-        "errorMsg": string;
+        "errorMsg"?: string;
         /**
           * By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
          */
-        "isGlobal"?: boolean;
+        "global"?: boolean;
         /**
           * By default a script tag will be rendered. Use this option to render an iframe instead.
          */
-        "isIframe"?: boolean;
-        /**
-          * Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
-         */
-        "isOnce"?: boolean;
+        "iframe"?: boolean;
         /**
           * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
          */
         "isReady"?: Function;
+        /**
+          * Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
+         */
+        "once"?: boolean;
         /**
           * Optional props to set on the script or iframe. Map of key:values supplied as object or JSON.
          */
@@ -43,7 +47,7 @@ export namespace Components {
         /**
           * Readonly: Expose the current status for debugging or as a hook for a CSS selector:
          */
-        "statusMsg": PengScriptStatusName;
+        "statusMsg"?: PengScriptStatusName;
         /**
           * Milliseconds to wait before discarding a slow loading script or iframe.
          */
@@ -72,26 +76,30 @@ declare global {
 declare namespace LocalJSX {
     interface FacadeScript {
         /**
+          * Optionally output debug info to the console whenever the component changes state
+         */
+        "debug"?: boolean;
+        /**
           * Readonly. Exposes any error message for debugging or as a hook for a CSS selector:
          */
         "errorMsg"?: string;
         /**
           * By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
          */
-        "isGlobal"?: boolean;
+        "global"?: boolean;
         /**
           * By default a script tag will be rendered. Use this option to render an iframe instead.
          */
-        "isIframe"?: boolean;
-        /**
-          * Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
-         */
-        "isOnce"?: boolean;
+        "iframe"?: boolean;
         /**
           * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
          */
         "isReady"?: Function;
         "onPengscript"?: (event: CustomEvent<PengScriptEvent>) => void;
+        /**
+          * Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
+         */
+        "once"?: boolean;
         /**
           * Optional props to set on the script or iframe. Map of key:values supplied as object or JSON.
          */

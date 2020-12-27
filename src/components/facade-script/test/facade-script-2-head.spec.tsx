@@ -19,16 +19,15 @@ describe.skip('facade-script for script added to <head>', () => {
     jest.clearAllMocks();
   });
 
-  it('should render script in <head> when head=true', async () => {
+  it('should render script in <head> when global=true', async () => {
     const page = await newSpecPage({
       components: [FacadeScript],
-      html: `<facade-script src="https://foo/bar.js" trigger="now" head></facade-script>`,
+      html: `<facade-script src="https://foo/bar.js" trigger="now" global></facade-script>`,
     });
 
     expect(page.root).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" head status="LOADING">
-        <div class="facade-placeholder-content" data-script-status="LOADING"></div>
-        <div class="facade-scripted-content" data-script-status="LOADING" hidden></div>
+      <facade-script src="https://foo/bar.js" trigger="now" global status="LOADING">
+        <div class="facade-script-placeholder"></div>
       </facade-script>
     `);
 
@@ -38,22 +37,20 @@ describe.skip('facade-script for script added to <head>', () => {
     expect(script[0]).toHaveProperty('src', 'https://foo/bar.js');
   });
 
-  it.only('should render scripts in <head> when head=true, for each instance', async () => {
+  it('should render scripts in <head> when global=true, for each instance', async () => {
     const page = await newSpecPage({
       components: [FacadeScript],
       html: `
-        <facade-script src="https://foo/bar.js" trigger="now" head></facade-script>
-        <facade-script src="https://foo/BAR2.js" trigger="now" head></facade-script>`,
+        <facade-script src="https://foo/bar.js" trigger="now" global></facade-script>
+        <facade-script src="https://foo/BAR2.js" trigger="now" global></facade-script>`,
     });
 
     expect(page.body).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" head status="LOADING">
-        <div class="facade-placeholder-content" data-script-status="LOADING"></div>
-        <div class="facade-scripted-content" data-script-status="LOADING" hidden></div>
+      <facade-script src="https://foo/bar.js" trigger="now" global status="LOADING">
+        <div class="facade-script-placeholder"></div>
       </facade-script>
-      <facade-script src="https://foo/BAR2.js" trigger="now" head status="LOADING">
-        <div class="facade-placeholder-content" data-script-status="LOADING"></div>
-        <div class="facade-scripted-content" data-script-status="LOADING" hidden></div>
+      <facade-script src="https://foo/BAR2.js" trigger="now" global status="LOADING">
+        <div class="facade-script-placeholder"></div>
       </facade-script>
     `);
 
@@ -64,7 +61,7 @@ describe.skip('facade-script for script added to <head>', () => {
     expect(scripts[1]).toHaveProperty('src', 'https://foo/BAR2.js');
   });
 
-  it.only('should render each unique script once in <head> when once=true & head=true', async () => {
+  it('should render each unique script once in <head> when once=true & global=true', async () => {
     const page = await newSpecPage({
       components: [FacadeScript],
       // html: ''
@@ -77,46 +74,34 @@ describe.skip('facade-script for script added to <head>', () => {
     page.win.addEventListener('pengscript', eventSpy);
 
     await page.setContent(
-      `<facade-script src="https://foo/bar.js" trigger="now" head once id="elem1"></facade-script>
-      <facade-script src="https://foo/bar.js" trigger="now" head once id="elem2"></facade-script>`
+      `<facade-script src="https://foo/bar.js" trigger="now" global once id="elem1"></facade-script>
+       <facade-script src="https://foo/bar.js" trigger="now" global once id="elem2"></facade-script>`
     );
 
 
     expect(page.body).toEqualHtml(`
-      <facade-script src="https://foo/bar.js" trigger="now" head once status="LOADING" id="elem1">
-        <div class="facade-placeholder-content" data-script-status="LOADING"></div>
-        <div class="facade-scripted-content" data-script-status="LOADING" hidden></div>
+      <facade-script src="https://foo/bar.js" trigger="now" global once status="LOADING" id="elem1">
+        <div class="facade-script-placeholder"></div>
       </facade-script>
-      <facade-script src="https://foo/bar.js" trigger="now" head once status="LOADING" id="elem2">
-        <div class="facade-placeholder-content" data-script-status="LOADING"></div>
-        <div class="facade-scripted-content" data-script-status="LOADING" hidden></div>
+      <facade-script src="https://foo/bar.js" trigger="now" global once status="LOADING" id="elem2">
+        <div class="facade-script-placeholder"></div>
       </facade-script>
     `);
 
     // Emitted events
     expect(eventSpy).toHaveBeenCalledTimes(4);
     expect(eventStatuses).toEqual(['TRIGGERED', 'LOADING', 'TRIGGERED', 'LOADING']);
-
-    await page.waitForChanges();
-    // await new Promise((r) => setTimeout(r, 2000));
-
-    // Script should be in the <head> this time:
-    const script = page.doc.head.querySelectorAll('script');
-    expect(script.length).toBe(1);
-    expect(script[0]).toHaveProperty('src', 'https://foo/bar.js');
   });
 
-  // it('should not render script tag until wait="2000"', async () => {
-  //   const page = await newSpecPage({
-  //     components: [FacadeScript],
-  //     html: `<facade-script src="https://foo/bar.js" trigger="now"></facade-script>`,
-  //   });
-  //   expect(page.root).toEqualHtml(`
-  //     <facade-script src="https://foo/bar.js" trigger="now" status="LOADING">
-  //       <div class="facade-placeholder-content" data-script-status="LOADING"></div>
-  //       <div class="facade-scripted-content" data-script-status="LOADING" hidden>
-  //       </div>
-  //     </facade-script>
-  //   `);
-  // });
+  it('should not render script tag until wait="2000"', async () => {
+    const page = await newSpecPage({
+      components: [FacadeScript],
+      html: `<facade-script src="https://foo/bar.js" trigger="now" wait="2000"></facade-script>`,
+    });
+    expect(page.body).toEqualHtml(`
+      <facade-script src="https://foo/bar.js" trigger="now" wait="2000" status="WAITING">
+        <div class="facade-script-placeholder"></div>
+      </facade-script>
+    `);
+  });
 });
