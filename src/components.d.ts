@@ -15,7 +15,7 @@ export namespace Components {
         /**
           * Readonly. Exposes any error message for debugging or as a hook for a CSS selector:
          */
-        "errorMsg"?: string;
+        "errMsg"?: string;
         /**
           * By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
          */
@@ -82,7 +82,7 @@ declare namespace LocalJSX {
         /**
           * Readonly. Exposes any error message for debugging or as a hook for a CSS selector:
          */
-        "errorMsg"?: string;
+        "errMsg"?: string;
         /**
           * By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.
          */
@@ -95,7 +95,7 @@ declare namespace LocalJSX {
           * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
          */
         "isReady"?: Function;
-        "onPengscript"?: (event: CustomEvent<PengScriptEvent>) => void;
+        "onFacadescript"?: (event: CustomEvent<PengScriptEvent>) => void;
         /**
           * Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
          */

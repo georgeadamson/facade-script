@@ -171,11 +171,11 @@ describe.only('facade-script for script added inline', () => {
     expect(page.body).toEqualHtml(`
       <facade-script src="https://foo/bar.js" trigger="now" once status="LOADING">
         <div class="facade-script-placeholder"></div>
-        <script src="https://foo/bar.js"></script>
+        <script src="https://foo/bar.js" data-facadescriptid="0" hidden></script>
       </facade-script>
       <facade-script src="https://foo/BAZ.js" trigger="now" once status="LOADING">
         <div class="facade-script-placeholder"></div>
-        <script src="https://foo/BAZ.js"></script>
+        <script src="https://foo/BAZ.js" data-facadescriptid="1" hidden></script>
       </facade-script>
     `);
 

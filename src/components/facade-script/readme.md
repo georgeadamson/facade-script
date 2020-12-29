@@ -8,7 +8,7 @@
 | Property    | Attribute   | Description                                                                                                                                                                                     | Type                                                                                                            | Default     |
 | ----------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------- |
 | `debug`     | `debug`     | Optionally output debug info to the console whenever the component changes state                                                                                                                | `boolean`                                                                                                       | `undefined` |
-| `errorMsg`  | `error`     | Readonly. Exposes any error message for debugging or as a hook for a CSS selector:                                                                                                              | `string`                                                                                                        | `undefined` |
+| `errMsg`    | `error`     | Readonly. Exposes any error message for debugging or as a hook for a CSS selector:                                                                                                              | `string`                                                                                                        | `undefined` |
 | `global`    | `global`    | By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead.                                                 | `boolean`                                                                                                       | `false`     |
 | `iframe`    | `iframe`    | By default a script tag will be rendered. Use this option to render an iframe instead.                                                                                                          | `boolean`                                                                                                       | `undefined` |
 | `isReady`   | --          | A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. | `Function`                                                                                                      | `undefined` |
@@ -24,9 +24,9 @@
 
 ## Events
 
-| Event        | Description | Type                                                                                                                                                                   |
-| ------------ | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pengscript` |             | `CustomEvent<{ code: PengScriptStatusCode; status: PengScriptStatusName; error?: 1; errorMsg?: string; iframe?: boolean; once?: boolean; id?: string; src: string; }>` |
+| Event          | Description | Type                                                                                                                                                                 |
+| -------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `facadescript` |             | `CustomEvent<{ code: PengScriptStatusCode; status: PengScriptStatusName; error?: 1; errMsg?: string; iframe?: boolean; once?: boolean; id?: string; src: string; }>` |
 
 
 ----------------------------------------------

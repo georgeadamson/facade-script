@@ -5,7 +5,7 @@ export declare type PengScriptEvent = {
   code: PengScriptStatusCode;
   status: PengScriptStatusName;
   error?: PengScriptErrorCode;
-  errorMsg?: string;
+  errMsg?: string;
   iframe?: boolean;
   once?: boolean;
   id?: string;
@@ -34,7 +34,7 @@ export declare class FacadeScript {
   /** A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
   isReady?: Function;
   /** Readonly. Exposes any error message for debugging or as a hook for a CSS selector: */
-  errorMsg?: string;
+  errMsg?: string;
   /** Readonly: Expose the current status for debugging or as a hook for a CSS selector: */
   statusMsg?: PengScriptStatusName;
   /** Optionally output debug info to the console whenever the component changes state */
@@ -44,13 +44,13 @@ export declare class FacadeScript {
   private error;
   onError(code: PengScriptErrorCode): void;
   onStatus(code: PengScriptStatusCode, oldCode: PengScriptStatusCode): void;
-  pengscript: EventEmitter<PengScriptEvent>;
+  facadescript: EventEmitter<PengScriptEvent>;
   private src;
   private uid;
   private timeoutId;
   componentWillLoad(): void;
   componentDidLoad(): void;
-  private isScriptOnPage;
+  private isOnPage;
   private onTrigger;
   private onLoad;
   render(): any;
