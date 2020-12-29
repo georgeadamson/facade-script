@@ -9,8 +9,9 @@ For example to only load a YouTube iFrame when the user _scrolls down_ to it.
 
 TLDR usage:
 
-- JS: `<facade-script src="/lazyload/any/script.js">` or
-- iFrame: `<facade-script iframe src="/lazyload/any/embed.js">`
+- JS: `<facade-script src="/lazyload/any/script.js"></facade-script>` or
+- iFrame: `<facade-script iframe src="/lazyload/any/embed.js"></facade-script>`
+- iFrame video: `<facade-script iframe trigger="click" src="/lazyload/any/youtube.js">Play</facade-script>`
 
 Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-with-mindful-loading-28905edac84d) or [Import on interaction pattern](https://addyosmani.com/blog/import-on-interaction/).
 
@@ -21,7 +22,7 @@ Loading can be triggered when you:
 
 ## Step 1 of 2
 
-Include the script in your page: (`~8.5kb` gzipped)
+Include the script in your page: (`~8.2kb` gzipped)
 
 ```html
 <script
@@ -161,7 +162,7 @@ See this readme for a [full list of config options](https://github.com/georgeada
 ## Notes
 
 - Curently in Beta. Appears stable but still testing in the wild.
-- ~8.5kb when you use the CDN link (minified & gzipped). I have yet to see if I can make it smaller with some more analysis.
+- ~8.2kb when you use the CDN link (minified & gzipped). I have yet to see if I can make it smaller with some more analysis.
 - To do: Solutions for better accessibility of placeholders etc.
 - To do: Consider what happens during prerender. This should probably not render the script or iframe when running server-side.
 - But why is it called facade-script? Because of the Facade Pattern: As well as lazyloading it can render a fake UI or placeholder until the real third party loads.

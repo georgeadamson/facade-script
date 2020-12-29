@@ -1,7 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { FacadeScript } from '../facade-script';
 
-describe.skip('facade-script for script added to <head>', () => {
+describe('facade-script for script added to <head>', () => {
   beforeAll(() => {
     // Mock IntersectionObserver because it is not available in test environment
     const mockIntersectionObserver = jest.fn();
@@ -71,7 +71,7 @@ describe.skip('facade-script for script added to <head>', () => {
     const eventStatuses = [];
 
     const eventSpy = jest.fn((e) => { eventStatuses.push(e.detail.status) });
-    page.win.addEventListener('pengscript', eventSpy);
+    page.win.addEventListener('facadescript', eventSpy);
 
     await page.setContent(
       `<facade-script src="https://foo/bar.js" trigger="now" global once id="elem1"></facade-script>
