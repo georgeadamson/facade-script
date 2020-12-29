@@ -11,7 +11,7 @@ TLDR usage:
 
 - JS: `<facade-script src="/lazyload/any/script.js"></facade-script>` or
 - iFrame: `<facade-script iframe src="/lazyload/any/embed.js"></facade-script>`
-- iFrame video: `<facade-script iframe trigger="click" src="/lazyload/any/youtube.js">Play</facade-script>`
+- iFrame video: `<facade-script iframe trigger="click" src="/any/youtube.js">Play</facade-script>`
 
 Perfect for the [Mindful-loading pattern](https://uxdesign.cc/boost-page-speed-with-mindful-loading-28905edac84d) or [Import on interaction pattern](https://addyosmani.com/blog/import-on-interaction/).
 
