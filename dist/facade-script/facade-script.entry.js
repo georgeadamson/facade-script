@@ -1,7 +1,4 @@
-import { createEvent, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
-export { setAssetPath } from '@stencil/core/internal/client';
-
-const globalScripts = () => {};
+import { r as registerInstance, e as createEvent, h, f as Host, g as getElement } from './index-a8647ac6.js';
 
 // Experiment to reduce code size: (Safe to remove these 3 lines)
 const clearTimeout = window.clearTimeout;
@@ -34,10 +31,9 @@ for (const key in STATUS)
 // Note that it is a map so we can track different script src urls.
 const globalStatusCode = {};
 let nextUid = 0;
-const FacadeScript = class extends HTMLElement {
-  constructor() {
-    super();
-    this.__registerHost();
+const FacadeScript = class {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
     this.facadescript = createEvent(this, "facadescript", 7);
     /** Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag. */
     this.once = false;
@@ -208,7 +204,7 @@ const FacadeScript = class extends HTMLElement {
     const hidePlaceholder = !hidden && status !== STATUS.TIMEOUT;
     return (h(Host, Object.assign({}, hostProps), h("div", { class: "facade-script-placeholder", hidden: hidePlaceholder }, h("slot", null)), script));
   }
-  get host() { return this; }
+  get host() { return getElement(this); }
   static get watchers() { return {
     "error": ["onError"],
     "status": ["onStatus"]
@@ -277,18 +273,4 @@ const awaitScriptReady = async (test, timeout, interval = 200) => new Promise((r
   }
 });
 
-globalScripts();
-const FacadeScript$1 = /*@__PURE__*/proxyCustomElement(FacadeScript, [4,"facade-script",{"srcProd":[1,"src"],"iframe":[4],"once":[4],"global":[4],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errMsg":[513,"error"],"statusMsg":[513,"status"],"debug":[4],"status":[32],"error":[32]}]);
-const defineCustomElements = (opts) => {
-  if (typeof customElements !== 'undefined') {
-    [
-      FacadeScript$1
-    ].forEach(cmp => {
-      if (!customElements.get(cmp.is)) {
-        customElements.define(cmp.is, cmp, opts);
-      }
-    });
-  }
-};
-
-export { FacadeScript$1 as FacadeScript, defineCustomElements };
+export { FacadeScript as facade_script };

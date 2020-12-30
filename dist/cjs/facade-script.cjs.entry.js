@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-c0158ca9.js');
+const index = require('./index-6be36c99.js');
 
 // Experiment to reduce code size: (Safe to remove these 3 lines)
 const clearTimeout = window.clearTimeout;
@@ -97,6 +97,9 @@ const FacadeScript = class {
           // this.status < STATUS.LOADING &&
           !(once && this.isOnPage())) {
           createElement(iframe ? 'iframe' : 'script', Object.assign({ src, [SCRIPT_UID_ATTR]: uid, onLoad }, parseJSON(props)), document.head);
+        }
+        else {
+          // Otherwise the render method will render the script or iframe because status >= TRIGGERED
         }
         // Update status:
         this.status = globalStatusCode[src] = STATUS.LOADING;
@@ -229,22 +232,23 @@ function createElement(tag, props = {}, appendTo) {
     // Set prop directly if it exists or if value is a function:
     // Note: This will need to be enhanced for other complex types such as Dates.
     el.hasOwnProperty(key) ||
-      (typeof value === 'function') ||
-      (typeof value === 'object' && (json = toJSON(value)) && (value = json)) ?
-      el[key] = value :
+      (typeof value === 'function')
+      // Put this feature on ice until needed:
+      // || (typeof value === 'object' && (json = toJSON(value)) && (value = json))
+      ?
+        el[key] = value :
       el.setAttribute(key, value);
   });
   if (appendTo)
     appendTo.appendChild(el);
-  // Helper to csilently onvert value to JSON without throwing errors:
-  const toJSON = (value) => {
-    try {
-      return JSON.stringify(value);
-    }
-    catch (err) {
-      // return undefined;
-    }
-  };
+  // Helper to silently onvert value to JSON without throwing errors:
+  // const toJSON = (value) => {
+  //   try {
+  //     return JSON.stringify(value);
+  //   } catch (err) {
+  //     // return undefined;
+  //   }
+  // }
 }
 const statusOfGlobalScript = (src) => (globalStatusCode[src] || STATUS.IDLE);
 const newIntersectionObserver = (callback) => new IntersectionObserver(([entry], observer) => {

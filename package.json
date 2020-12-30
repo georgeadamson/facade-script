@@ -25,7 +25,7 @@
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e --runInBand",
-    "test:watch": "stencil test --spec --e2e --watchAll --runInBand",
+    "test:watch": "stencil test --spec --e2e --watchAll --runInBand --coverage",
     "generate": "stencil generate"
   },
   "dependencies": {

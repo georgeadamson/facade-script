@@ -178,4 +178,24 @@ describe('facade-script for script added inline', () => {
     // And no other scripts should have been added:
     expect(page.doc.querySelectorAll('script[src]').length).toEqual(2);
   });
+
+
+  it('should set props on the script element', async () => {
+    const page = await newSpecPage({
+      components: [FacadeScript],
+      html: `
+        <facade-script src="/sample-script.js" trigger="now" props='{"title":"test"}'></facade-script>
+      `,
+    });
+
+    expect(page.body).toEqualHtml(`
+      <facade-script src="/sample-script.js" trigger="now" props='{"title":"test"}' status="LOADING">
+        <div class="facade-script-placeholder"></div>
+        <script src="/sample-script.js" data-facadescriptid="13" hidden title="test"></script>
+      </facade-script>
+    `);
+
+    // And no other scripts should have been added:
+    // expect(page.doc.querySelectorAll('script[src]').length).toEqual(2);
+  });
 });

@@ -1,25 +1,39 @@
 'use strict';
 
-const index = require('./index-c0158ca9.js');
+const index = require('./index-6be36c99.js');
+const appGlobals = require('./app-globals-3a1e7e63.js');
 
 /*
  Stencil Client Patch Browser v2.3.0 | MIT Licensed | https://stenciljs.com
  */
 const getDynamicImportFunction = (namespace) => `__sc_import_${namespace.replace(/\s|-/g, '_')}`;
 const patchBrowser = () => {
-    {
+    // NOTE!! This fn cannot use async/await!
+    if (index.BUILD.isDev && !index.BUILD.isTesting) {
+        index.consoleDevInfo('Running in development mode.');
+    }
+    if (index.BUILD.cssVarShim) {
         // shim css vars
         index.plt.$cssShim$ = index.win.__cssshim;
     }
-    {
+    if (index.BUILD.cloneNodeFix) {
         // opted-in to polyfill cloneNode() for slot polyfilled components
         patchCloneNodeFix(index.H.prototype);
     }
+    if (index.BUILD.profile && !performance.mark) {
+        // not all browsers support performance.mark/measure (Safari 10)
+        performance.mark = performance.measure = () => {
+            /*noop*/
+        };
+        performance.getEntriesByName = () => [];
+    }
     // @ts-ignore
-    const scriptElm =  Array.from(index.doc.querySelectorAll('script')).find(s => new RegExp(`\/${index.NAMESPACE}(\\.esm)?\\.js($|\\?|#)`).test(s.src) || s.getAttribute('data-stencil-namespace') === index.NAMESPACE)
-        ;
-    const opts =  {};
-    if ( 'onbeforeload' in scriptElm && !history.scrollRestoration /* IS_ESM_BUILD */) {
+    const scriptElm = index.BUILD.scriptDataOpts || index.BUILD.safari10 || index.BUILD.dynamicImportShim
+        ? Array.from(index.doc.querySelectorAll('script')).find(s => new RegExp(`\/${index.NAMESPACE}(\\.esm)?\\.js($|\\?|#)`).test(s.src) || s.getAttribute('data-stencil-namespace') === index.NAMESPACE)
+        : null;
+    const importMeta = (typeof document === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : (document.currentScript && document.currentScript.src || new URL('facade-script.cjs.js', document.baseURI).href));
+    const opts = index.BUILD.scriptDataOpts ? scriptElm['data-opts'] || {} : {};
+    if (index.BUILD.safari10 && 'onbeforeload' in scriptElm && !history.scrollRestoration /* IS_ESM_BUILD */) {
         // Safari < v11 support: This IF is true if it's Safari below v11.
         // This fn cannot use async/await since Safari didn't support it until v11,
         // however, Safari 10 did support modules. Safari 10 also didn't support "nomodule",
@@ -33,12 +47,15 @@ const patchBrowser = () => {
             },
         };
     }
-    {
+    if (!index.BUILD.safari10 && importMeta !== '') {
+        opts.resourcesUrl = new URL('.', importMeta).href;
+    }
+    else if (index.BUILD.dynamicImportShim || index.BUILD.safari10) {
         opts.resourcesUrl = new URL('.', new URL(scriptElm.getAttribute('data-resources-url') || scriptElm.src, index.win.location.href)).href;
-        {
+        if (index.BUILD.dynamicImportShim) {
             patchDynamicImport(opts.resourcesUrl, scriptElm);
         }
-        if ( !index.win.customElements) {
+        if (index.BUILD.dynamicImportShim && !index.win.customElements) {
             // module support, but no custom elements support (Old Edge)
             // @ts-ignore
             return Promise.resolve().then(function () { return require(/* webpackChunkName: "polyfills-dom" */ './dom-9c8e2fa2.js'); }).then(() => opts);
@@ -102,5 +119,6 @@ const patchCloneNodeFix = (HTMLElementPrototype) => {
 };
 
 patchBrowser().then(options => {
+  appGlobals.globalScripts();
   return index.bootstrapLazy([["facade-script.cjs",[[4,"facade-script",{"srcProd":[1,"src"],"iframe":[4],"once":[4],"global":[4],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errMsg":[513,"error"],"statusMsg":[513,"status"],"debug":[4],"status":[32],"error":[32]}]]]], options);
 });

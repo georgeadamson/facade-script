@@ -111,7 +111,7 @@ declare namespace LocalJSX {
         /**
           * Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered.
          */
-        "srcProd"?: string;
+        "srcProd": string;
         /**
           * Readonly: Expose the current status for debugging or as a hook for a CSS selector:
          */

@@ -214,7 +214,7 @@ export class FacadeScript {
         "resolved": "string",
         "references": {}
       },
-      "required": false,
+      "required": true,
       "optional": false,
       "docs": {
         "tags": [],
@@ -499,22 +499,23 @@ function createElement(tag, props = {}, appendTo) {
     // Set prop directly if it exists or if value is a function:
     // Note: This will need to be enhanced for other complex types such as Dates.
     el.hasOwnProperty(key) ||
-      (typeof value === 'function') ||
-      (typeof value === 'object' && (json = toJSON(value)) && (value = json)) ?
-      el[key] = value :
+      (typeof value === 'function')
+      // Put this feature on ice until needed:
+      // || (typeof value === 'object' && (json = toJSON(value)) && (value = json))
+      ?
+        el[key] = value :
       el.setAttribute(key, value);
   });
   if (appendTo)
     appendTo.appendChild(el);
-  // Helper to csilently onvert value to JSON without throwing errors:
-  const toJSON = (value) => {
-    try {
-      return JSON.stringify(value);
-    }
-    catch (err) {
-      // return undefined;
-    }
-  };
+  // Helper to silently onvert value to JSON without throwing errors:
+  // const toJSON = (value) => {
+  //   try {
+  //     return JSON.stringify(value);
+  //   } catch (err) {
+  //     // return undefined;
+  //   }
+  // }
 }
 const statusOfGlobalScript = (src) => (globalStatusCode[src] || STATUS.IDLE);
 const newIntersectionObserver = (callback) => new IntersectionObserver(([entry], observer) => {

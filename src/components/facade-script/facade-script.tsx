@@ -76,7 +76,7 @@ let nextUid: number = 0;
 })
 export class FacadeScript {
   /** Required. src for the `<script>` or `<iframe>` that will be added to the DOM when lazyload is triggered. */
-  @Prop({ attribute: 'src' }) srcProd: string;
+  @Prop({ attribute: 'src' }) srcProd!: string;
 
   // The src is required. The rest are options:
 
@@ -378,22 +378,24 @@ function createElement(tag: string, props: object = {}, appendTo?: HTMLElement):
     // Set prop directly if it exists or if value is a function:
     // Note: This will need to be enhanced for other complex types such as Dates.
     el.hasOwnProperty(key) ||
-      (typeof value === 'function') ||
-      (typeof value === 'object' && (json = toJSON(value)) && (value = json)) ?
+      (typeof value === 'function')
+      // Put this feature on ice until needed:
+      // || (typeof value === 'object' && (json = toJSON(value)) && (value = json))
+      ?
       el[key] = value :
       el.setAttribute(key, value);
   });
 
   if (appendTo) appendTo.appendChild(el);
 
-  // Helper to csilently onvert value to JSON without throwing errors:
-  const toJSON = (value) => {
-    try {
-      return JSON.stringify(value);
-    } catch (err) {
-      // return undefined;
-    }
-  }
+  // Helper to silently onvert value to JSON without throwing errors:
+  // const toJSON = (value) => {
+  //   try {
+  //     return JSON.stringify(value);
+  //   } catch (err) {
+  //     // return undefined;
+  //   }
+  // }
 }
 
 const statusOfGlobalScript = (src) => (globalStatusCode[src] || STATUS.IDLE);
