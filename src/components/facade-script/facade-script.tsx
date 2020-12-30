@@ -370,7 +370,7 @@ function parseJSON(json: object | string): object {
 
 // Helper to create an element with attributes and append it to a DOM element:
 function createElement(tag: string, props: object = {}, appendTo?: HTMLElement): void {
-  let json;
+  // let json;
   const el = document.createElement(tag);
 
   Object.entries(props).forEach(([key, value]) => {

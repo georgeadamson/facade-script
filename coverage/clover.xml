@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1609366280257" clover="3.2.0">
-  <project timestamp="1609366280257" name="All files">
+<coverage generated="1609366395918" clover="3.2.0">
+  <project timestamp="1609366395918" name="All files">
     <metrics statements="118" coveredstatements="84" conditionals="105" coveredconditionals="61" methods="25" coveredmethods="15" elements="248" coveredelements="160" complexity="0" loc="118" ncloc="118" packages="1" files="1" classes="1"/>
     <file name="facade-script.tsx" path="/Users/geoadams3/sites/peng-script/src/components/facade-script/facade-script.tsx">
       <metrics statements="118" coveredstatements="84" conditionals="105" coveredconditionals="61" methods="25" coveredmethods="15"/>

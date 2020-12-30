@@ -1,8 +1,6 @@
 import { createEvent, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
 export { setAssetPath } from '@stencil/core/internal/client';
 
-const globalScripts = () => {};
-
 // Experiment to reduce code size: (Safe to remove these 3 lines)
 const clearTimeout = window.clearTimeout;
 const clearInterval = window.clearInterval;
@@ -97,9 +95,6 @@ const FacadeScript = class extends HTMLElement {
           // this.status < STATUS.LOADING &&
           !(once && this.isOnPage())) {
           createElement(iframe ? 'iframe' : 'script', Object.assign({ src, [SCRIPT_UID_ATTR]: uid, onLoad }, parseJSON(props)), document.head);
-        }
-        else {
-          // Otherwise the render method will render the script or iframe because status >= TRIGGERED
         }
         // Update status:
         this.status = globalStatusCode[src] = STATUS.LOADING;
@@ -226,7 +221,7 @@ function parseJSON(json) {
 }
 // Helper to create an element with attributes and append it to a DOM element:
 function createElement(tag, props = {}, appendTo) {
-  let json;
+  // let json;
   const el = document.createElement(tag);
   Object.entries(props).forEach(([key, value]) => {
     // Set prop directly if it exists or if value is a function:
@@ -277,7 +272,6 @@ const awaitScriptReady = async (test, timeout, interval = 200) => new Promise((r
   }
 });
 
-globalScripts();
 const FacadeScript$1 = /*@__PURE__*/proxyCustomElement(FacadeScript, [4,"facade-script",{"srcProd":[1,"src"],"iframe":[4],"once":[4],"global":[4],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errMsg":[513,"error"],"statusMsg":[513,"status"],"debug":[4],"status":[32],"error":[32]}]);
 const defineCustomElements = (opts) => {
   if (typeof customElements !== 'undefined') {

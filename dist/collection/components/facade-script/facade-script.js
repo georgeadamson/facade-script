@@ -493,7 +493,7 @@ function parseJSON(json) {
 }
 // Helper to create an element with attributes and append it to a DOM element:
 function createElement(tag, props = {}, appendTo) {
-  let json;
+  // let json;
   const el = document.createElement(tag);
   Object.entries(props).forEach(([key, value]) => {
     // Set prop directly if it exists or if value is a function:

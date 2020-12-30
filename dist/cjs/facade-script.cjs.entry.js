@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-6be36c99.js');
+const index = require('./index-c0158ca9.js');
 
 // Experiment to reduce code size: (Safe to remove these 3 lines)
 const clearTimeout = window.clearTimeout;
@@ -97,9 +97,6 @@ const FacadeScript = class {
           // this.status < STATUS.LOADING &&
           !(once && this.isOnPage())) {
           createElement(iframe ? 'iframe' : 'script', Object.assign({ src, [SCRIPT_UID_ATTR]: uid, onLoad }, parseJSON(props)), document.head);
-        }
-        else {
-          // Otherwise the render method will render the script or iframe because status >= TRIGGERED
         }
         // Update status:
         this.status = globalStatusCode[src] = STATUS.LOADING;
@@ -226,7 +223,7 @@ function parseJSON(json) {
 }
 // Helper to create an element with attributes and append it to a DOM element:
 function createElement(tag, props = {}, appendTo) {
-  let json;
+  // let json;
   const el = document.createElement(tag);
   Object.entries(props).forEach(([key, value]) => {
     // Set prop directly if it exists or if value is a function:
