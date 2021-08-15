@@ -1,5 +1,5 @@
 import { createEvent, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
-export { setAssetPath } from '@stencil/core/internal/client';
+export { setAssetPath, setPlatformOptions } from '@stencil/core/internal/client';
 
 // Experiment to reduce code size: (Safe to remove these 3 lines)
 const clearTimeout = window.clearTimeout;
@@ -32,7 +32,7 @@ for (const key in STATUS)
 // Note that it is a map so we can track different script src urls.
 const globalStatusCode = {};
 let nextUid = 0;
-const FacadeScript = class extends HTMLElement {
+const FacadeScript$1 = class extends HTMLElement {
   constructor() {
     super();
     this.__registerHost();
@@ -272,11 +272,11 @@ const awaitScriptReady = async (test, timeout, interval = 200) => new Promise((r
   }
 });
 
-const FacadeScript$1 = /*@__PURE__*/proxyCustomElement(FacadeScript, [4,"facade-script",{"srcProd":[1,"src"],"iframe":[4],"once":[4],"global":[4],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errMsg":[513,"error"],"statusMsg":[513,"status"],"debug":[4],"status":[32],"error":[32]}]);
+const FacadeScript = /*@__PURE__*/proxyCustomElement(FacadeScript$1, [4,"facade-script",{"srcProd":[1,"src"],"iframe":[4],"once":[4],"global":[4],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errMsg":[513,"error"],"statusMsg":[513,"status"],"debug":[4],"status":[32],"error":[32]}]);
 const defineCustomElements = (opts) => {
   if (typeof customElements !== 'undefined') {
     [
-      FacadeScript$1
+      FacadeScript
     ].forEach(cmp => {
       if (!customElements.get(cmp.is)) {
         customElements.define(cmp.is, cmp, opts);
@@ -285,4 +285,4 @@ const defineCustomElements = (opts) => {
   }
 };
 
-export { FacadeScript$1 as FacadeScript, defineCustomElements };
+export { FacadeScript, defineCustomElements };

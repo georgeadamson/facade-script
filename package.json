@@ -29,7 +29,7 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@stencil/core": "2.3.0"
+    "@stencil/core": "2.6.0"
   },
   "license": "MIT",
   "devDependencies": {
@@ -37,6 +37,6 @@
     "@types/puppeteer": "^3.0.1",
     "jest": "^26.4.2",
     "jest-cli": "^26.4.2",
-    "puppeteer": "^5.2.1"
+    "puppeteer": "^5.5.0"
   }
 }

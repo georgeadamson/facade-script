@@ -224,6 +224,13 @@ export declare const setMode: (handler: ResolutionHandler) => void;
  * getMode
  */
 export declare function getMode<T = string | undefined>(ref: any): T;
+export declare function setPlatformHelpers(helpers: {
+    jmp?: (c: any) => any;
+    raf?: (c: any) => number;
+    ael?: (el: any, eventName: string, listener: any, options: any) => void;
+    rel?: (el: any, eventName: string, listener: any, options: any) => void;
+    ce?: (eventName: string, opts?: any) => any;
+}): void;
 /**
  * Get the base path to where the assets can be found. Use `setAssetPath(path)`
  * if the path needs to be customized.
@@ -1439,10 +1446,10 @@ export declare namespace JSXBase {
         onCompositionUpdateCapture?: (event: CompositionEvent) => void;
         onFocus?: (event: FocusEvent) => void;
         onFocusCapture?: (event: FocusEvent) => void;
-        onFocusIn?: (event: FocusEvent) => void;
-        onFocusInCapture?: (event: FocusEvent) => void;
-        onFocusOut?: (event: FocusEvent) => void;
-        onFocusOutCapture?: (event: FocusEvent) => void;
+        onFocusin?: (event: FocusEvent) => void;
+        onFocusinCapture?: (event: FocusEvent) => void;
+        onFocusout?: (event: FocusEvent) => void;
+        onFocusoutCapture?: (event: FocusEvent) => void;
         onBlur?: (event: FocusEvent) => void;
         onBlurCapture?: (event: FocusEvent) => void;
         onChange?: (event: Event) => void;

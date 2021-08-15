@@ -1,6 +1,6 @@
 /* FacadeScript custom elements bundle */
 
-import { Components, JSX } from "../types/components";
+import type { Components, JSX } from "../types/components";
 
 interface FacadeScript extends Components.FacadeScript, HTMLElement {}
 export const FacadeScript: {
@@ -32,6 +32,14 @@ export declare const defineCustomElements: (opts?: any) => void;
  */
 export declare const setAssetPath: (path: string) => void;
 
-export { Components, JSX };
+export interface SetPlatformOptions {
+  raf?: (c: FrameRequestCallback) => number;
+  ael?: (el: EventTarget, eventName: string, listener: EventListenerOrEventListenerObject, options: boolean | AddEventListenerOptions) => void;
+  rel?: (el: EventTarget, eventName: string, listener: EventListenerOrEventListenerObject, options: boolean | AddEventListenerOptions) => void;
+  ce?: (eventName: string, opts?: any) => CustomEvent;
+}
+export declare const setPlatformOptions: (opts: SetPlatformOptions) => void;
+
+export type { Components, JSX };
 
 export * from '../types';

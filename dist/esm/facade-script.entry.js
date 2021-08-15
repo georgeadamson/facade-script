@@ -1,4 +1,4 @@
-import { r as registerInstance, c as createEvent, h, e as Host, g as getElement } from './index-d373a0aa.js';
+import { r as registerInstance, c as createEvent, h, e as Host, g as getElement } from './index-1aedce71.js';
 
 // Experiment to reduce code size: (Safe to remove these 3 lines)
 const clearTimeout = window.clearTimeout;
