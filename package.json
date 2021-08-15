@@ -1,7 +1,8 @@
 {
   "name": "facade-script",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Lazyloader for any script or embed",
+  "homepage":"https://github.com/georgeadamson/facade-script",
   "keywords": [
     "lazyload",
     "lazy load",
@@ -9,6 +10,13 @@
     "interaction pattern",
     "embed"
   ],
+  "author": {
+    "name": "George Adamson",
+    "url": "https://github.com/georgeadamson"
+  },
+  "bugs": {
+    "url": "https://github.com/georgeadamson/facade-script/issues"
+  },
   "main": "dist/index.cjs.js",
   "module": "dist/custom-elements/index.js",
   "es2015": "dist/esm/index.mjs",
