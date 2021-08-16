@@ -24,7 +24,7 @@ const patchEsm = () => {
 const defineCustomElements = (win, options) => {
   if (typeof window === 'undefined') return Promise.resolve();
   return patchEsm().then(() => {
-  return bootstrapLazy([["facade-script",[[4,"facade-script",{"srcProd":[1,"src"],"iframe":[4],"once":[4],"global":[4],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"isReady":[16],"errMsg":[513,"error"],"statusMsg":[513,"status"],"debug":[4],"status":[32],"error":[32]}]]]], options);
+  return bootstrapLazy([["facade-script",[[4,"facade-script",{"srcProd":[1,"src"],"iframe":[4],"once":[4],"global":[4],"trigger":[1],"wait":[2],"props":[1],"showWhen":[1,"show-when"],"timeout":[2],"ready":[16],"errMsg":[513,"error"],"statusMsg":[513,"status"],"debug":[4],"status":[32],"error":[32]}]]]], options);
   });
 };
 

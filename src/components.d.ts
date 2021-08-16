@@ -25,10 +25,6 @@ export namespace Components {
          */
         "iframe"?: boolean;
         /**
-          * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
-         */
-        "isReady"?: Function;
-        /**
           * Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
          */
         "once"?: boolean;
@@ -36,6 +32,10 @@ export namespace Components {
           * Optional props to set on the script or iframe. Map of key:values supplied as object or JSON.
          */
         "props"?: string | object;
+        /**
+          * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
+         */
+        "ready"?: Function;
         /**
           * Fine tune when an iframe will be shown. Defaults to wait until is has loaded.
          */
@@ -55,9 +55,9 @@ export namespace Components {
         /**
           * Specify when the script will be added to the page. Default is to lazy load.
          */
-        "trigger"?: 'now' | 'lazy' | 'click' | Function;
+        "trigger"?: 'lazy' | 'click' | 'now' | Function;
         /**
-          * Delay n milliseconds after being triggered.
+          * Delay n milliseconds after being triggered. Defaults to no wait
          */
         "wait"?: number;
     }
@@ -91,10 +91,6 @@ declare namespace LocalJSX {
           * By default a script tag will be rendered. Use this option to render an iframe instead.
          */
         "iframe"?: boolean;
-        /**
-          * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
-         */
-        "isReady"?: Function;
         "onFacadescript"?: (event: CustomEvent<PengScriptEvent>) => void;
         /**
           * Every instance of this component will add a script when triggered. Use this to ensure a script is only loaded once on the page, even when there are multiple instances of the tag.
@@ -104,6 +100,10 @@ declare namespace LocalJSX {
           * Optional props to set on the script or iframe. Map of key:values supplied as object or JSON.
          */
         "props"?: string | object;
+        /**
+          * A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads.
+         */
+        "ready"?: Function;
         /**
           * Fine tune when an iframe will be shown. Defaults to wait until is has loaded.
          */
@@ -123,9 +123,9 @@ declare namespace LocalJSX {
         /**
           * Specify when the script will be added to the page. Default is to lazy load.
          */
-        "trigger"?: 'now' | 'lazy' | 'click' | Function;
+        "trigger"?: 'lazy' | 'click' | 'now' | Function;
         /**
-          * Delay n milliseconds after being triggered.
+          * Delay n milliseconds after being triggered. Defaults to no wait
          */
         "wait"?: number;
     }

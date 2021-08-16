@@ -33,9 +33,9 @@ export type PengScriptEvent = {
 }
 
 // Experiment to reduce code size: (Safe to remove these 3 lines)
-const clearTimeout = window.clearTimeout;
-const clearInterval = window.clearInterval;
-const parseInt = window.parseInt;
+// const clearTimeout = window.clearTimeout;
+// const clearInterval = window.clearInterval;
+// const parseInt = window.parseInt;
 
 const SCRIPT_UID_ATTR = 'data-facadescriptid';
 
@@ -45,17 +45,26 @@ const ERROR_MESSAGE = {
   1: 'Script triggered but missing src',
 };
 
+const IDLE = 0;
+const TRIGGERED_BUT_NO_SRC= 0.1;
+const TRIGGERED= 2;
+const WAITING= 3;
+const LOADING= 4;
+const LOADED= 5;
+const READY= 6;
+const TIMEOUT= 7;
+
 // Global script load states:
 // Typically a script is considered global when it is added to <head> instead of inlining in this component)
 const STATUS: { [key: string]: PengScriptStatusCode } = {
-  IDLE: 0,
-  TRIGGERED_BUT_NO_SRC: 0.1,
-  TRIGGERED: 2,
-  WAITING: 3,
-  LOADING: 4, // This also tells us the <script> has need rendered
-  LOADED: 5,
-  READY: 6,
-  TIMEOUT: 7,
+  IDLE,
+  TRIGGERED_BUT_NO_SRC,
+  TRIGGERED,
+  WAITING,
+  LOADING, // This also tells us the <script> has need rendered
+  LOADED,
+  READY,
+  TIMEOUT,
 };
 
 // Derive a reverse lookup to tell us the status name for a given code:
@@ -90,10 +99,10 @@ export class FacadeScript {
   @Prop() global?: boolean = false;
 
   /** Specify when the script will be added to the page. Default is to lazy load. */
-  @Prop() trigger?: 'now' | 'lazy' | 'click' | Function = 'lazy';
+  @Prop() trigger?: 'lazy' | 'click' | 'now' | Function = 'lazy';
 
-  /** Delay n milliseconds after being triggered. */
-  @Prop() wait?: number = 0;
+  /** Delay n milliseconds after being triggered. Defaults to no wait */
+  @Prop() wait?: number;
 
   /** Optional props to set on the script or iframe. Map of key:values supplied as object or JSON. */
   @Prop() props?: string | object;
@@ -105,7 +114,7 @@ export class FacadeScript {
   @Prop() timeout?: number;
 
   /** A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
-  @Prop({ attribute: 'ready' }) isReady?: Function;
+  @Prop() ready?: Function;
 
   /** Readonly. Exposes any error message for debugging or as a hook for a CSS selector: */
   @Prop({ reflect: true, attribute: 'error' }) errMsg?: string;
@@ -134,18 +143,18 @@ export class FacadeScript {
   onStatus(code: PengScriptStatusCode, oldCode: PengScriptStatusCode) {
     if (code === oldCode) return;
 
-    const { debug, error, errMsg, once, src, timeoutId, host } = this;
+    const { debug, error, errMsg, once, src, timeoutId, host: { id } } = this;
 
-    if (timeoutId && code >= STATUS.READY) {
+    if (timeoutId && code >= READY) {
       clearTimeout(timeoutId);
     }
 
     // Update global status too, if script should only render once on page:
-    if (once && code >= STATUS.LOADING && code > statusOfGlobalScript(src)) {
+    if (once && code >= LOADING && code > statusOfGlobalScript(src)) {
       globalStatusCode[src] = code;
     }
 
-    const errorDetail: PengScriptEvent = { code, status: STATUS_NAME[code], error, errMsg, id: host.id, src };
+    const errorDetail: PengScriptEvent = { code, status: STATUS_NAME[code], error, errMsg, id, src };
     this.statusMsg = STATUS_NAME[code];
     this.facadescript.emit(errorDetail);
 
@@ -162,7 +171,7 @@ export class FacadeScript {
   private src: string;
 
   // A unique identifier for each instance of this Custom Element.
-  // We use this to identify the script or iframe rendered in the DOM. 
+  // We use this to identify the script or iframe rendered in the DOM.
   private uid: number = nextUid++;
 
   // Id of timer used to handle script load timeout:
@@ -192,8 +201,8 @@ export class FacadeScript {
 
     // Detect whether script tag is already in the page:
     if (once && this.isOnPage()) {
-      if (statusOfGlobalScript(src) < STATUS.LOADING) {
-        globalStatusCode[src] = STATUS.LOADING;
+      if (statusOfGlobalScript(src) < LOADING) {
+        globalStatusCode[src] = LOADING;
       }
       this.status = statusOfGlobalScript(src);
     }
@@ -205,7 +214,7 @@ export class FacadeScript {
     const selector = `[src^="${src}"]:not([${SCRIPT_UID_ATTR}=${uid}])`;
 
     return (
-      // statusOfGlobalScript(src) >= STATUS.TRIGGERED ||
+      // statusOfGlobalScript(src) >= TRIGGERED ||
       Boolean(document.querySelector(`script${selector},iframe${selector}`))
     );
   }
@@ -215,11 +224,11 @@ export class FacadeScript {
     const { once, global, iframe, wait, src, uid, props, onLoad, timeout } = this;
 
     // Update status (and thereby emit event to inform any listeners)
-    this.status = STATUS.TRIGGERED;
+    this.status = TRIGGERED;
 
     if (!src) {
       this.error = 1;
-      this.status = STATUS.IDLE;
+      this.status = IDLE;
       return;
     } else if (this.error) {
       this.error = undefined;
@@ -227,8 +236,8 @@ export class FacadeScript {
 
     // Bail out now if already loading:
     if (once && this.isOnPage()) {
-      if (statusOfGlobalScript(src) < STATUS.LOADING) {
-        globalStatusCode[src] = STATUS.LOADING;
+      if (statusOfGlobalScript(src) < LOADING) {
+        globalStatusCode[src] = LOADING;
       }
       this.status = statusOfGlobalScript(src);
       return;
@@ -238,14 +247,14 @@ export class FacadeScript {
     const initScriptLoad = () => {
       //
       if (once && this.isOnPage()) {
-        this.status = globalStatusCode[src] || (globalStatusCode[src] = STATUS.READY);
+        this.status = globalStatusCode[src] || (globalStatusCode[src] = READY);
         return;
       }
 
       // Add script to the <head> if not already running:
       if (
         global &&
-        // this.status < STATUS.LOADING &&
+        // this.status < LOADING &&
         !(once && this.isOnPage())
       ) {
         createElement(
@@ -258,14 +267,14 @@ export class FacadeScript {
       }
 
       // Update status:
-      this.status = globalStatusCode[src] = STATUS.LOADING;
+      this.status = globalStatusCode[src] = LOADING;
 
       // Set a timeout timer if necessary:
       if (timeout) {
         this.timeoutId = setTimeout(
           () => {
-            if (this.status < STATUS.READY) {
-              (this.status = STATUS.TIMEOUT)
+            if (this.status < READY) {
+              (this.status = TIMEOUT)
             }
           },
           timeout
@@ -275,7 +284,7 @@ export class FacadeScript {
 
     // Append script to page, but wait first if specified:
     if (wait) {
-      this.status = STATUS.WAITING;
+      this.status = WAITING;
       setTimeout(initScriptLoad, wait);
     } else {
       initScriptLoad();
@@ -284,16 +293,16 @@ export class FacadeScript {
 
   // Handler triggered by the load event of the script or iframe:
   private onLoad = () => {
-    if (this.status !== STATUS.TIMEOUT) {
-      const { src, once, isReady, timeout, timeoutId } = this;
+    if (this.status !== TIMEOUT) {
+      const { src, once, ready, timeout, timeoutId } = this;
 
       clearTimeout(timeoutId);
 
-      if (once) globalStatusCode[src] = STATUS.LOADED;
-      this.status = STATUS.LOADED;
+      if (once) globalStatusCode[src] = LOADED;
+      this.status = LOADED;
 
-      awaitScriptReady(isReady || (() => true), timeout)
-        .then(() => (this.status = STATUS.READY))
+      awaitScriptReady(ready || (() => true), timeout)
+        .then(() => (this.status = READY))
         .catch((err) => console.error('awaitScriptReady', err));
     }
   };
@@ -316,13 +325,13 @@ export class FacadeScript {
 
     // Decide when to swap out default placeholder when script loads:
     const showWhenStatus =
-      STATUS[String(showWhen).toUpperCase()] || STATUS.LOADED;
+      STATUS[String(showWhen).toUpperCase()] || LOADED;
 
     // Should the iframe (or script) remain hidden?
     const hidden = status < showWhenStatus;
 
     // Do we want to render a script tag yet?
-    if (!global && status > STATUS.WAITING && !(once && this.isOnPage())) {
+    if (!global && status > WAITING && !(once && this.isOnPage())) {
       const Tag = iframe ? 'iframe' : 'script';
       const scriptProps = {
         src,
@@ -336,11 +345,11 @@ export class FacadeScript {
 
     // Bind a click handler to the host element if necessary:
     const hostProps = {
-      onClick: trigger === 'click' && status < STATUS.TRIGGERED && onTrigger,
+      onClick: trigger === 'click' && status < TRIGGERED && onTrigger,
     };
 
     // Decide whether to show either the placeholder or the result of the script:
-    const hidePlaceholder = !hidden && status !== STATUS.TIMEOUT;
+    const hidePlaceholder = !hidden && status !== TIMEOUT;
 
     return (
       <Host {...hostProps}>
@@ -398,7 +407,7 @@ function createElement(tag: string, props: object = {}, appendTo?: HTMLElement):
   // }
 }
 
-const statusOfGlobalScript = (src) => (globalStatusCode[src] || STATUS.IDLE);
+const statusOfGlobalScript = (src) => (globalStatusCode[src] || IDLE);
 
 const newIntersectionObserver = (callback: Function) => new IntersectionObserver(
   ([entry]: IntersectionObserverEntry[], observer: IntersectionObserver) => {
@@ -411,7 +420,7 @@ const newIntersectionObserver = (callback: Function) => new IntersectionObserver
 
 const awaitScriptReady =
   async (test: Function, timeout: number, interval: number = 200) =>
-    new Promise((resolve: (value: void) => void, reject: (reason: string) => void) => {
+    new Promise((resolve: (value: boolean) => void, reject: (reason: string) => void) => {
       let timeoutId: NodeJS.Timeout;
 
       // Run the test every n milliseconds to find out whether the script is ready:
@@ -420,7 +429,7 @@ const awaitScriptReady =
           // Clear timers and let the calling code know the script is ready to run:
           clearTimeout(timeoutId);
           clearInterval(intervalId);
-          resolve();
+          resolve(true);
         }
       }, parseInt(interval as unknown as string) || 200);
 

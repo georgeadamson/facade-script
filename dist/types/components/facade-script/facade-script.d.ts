@@ -22,8 +22,8 @@ export declare class FacadeScript {
   /** By default the script will be added to the page within the facade-script tags. Use the global option to add the script to the `<head>` instead. */
   global?: boolean;
   /** Specify when the script will be added to the page. Default is to lazy load. */
-  trigger?: 'now' | 'lazy' | 'click' | Function;
-  /** Delay n milliseconds after being triggered. */
+  trigger?: 'lazy' | 'click' | 'now' | Function;
+  /** Delay n milliseconds after being triggered. Defaults to no wait */
   wait?: number;
   /** Optional props to set on the script or iframe. Map of key:values supplied as object or JSON. */
   props?: string | object;
@@ -32,7 +32,7 @@ export declare class FacadeScript {
   /** Milliseconds to wait before discarding a slow loading script or iframe. */
   timeout?: number;
   /** A function that will return true when your script has loaded an run. For example to detect `'myVideoPlayer' in window`. Without this we assume the script is ready for use as soon as it loads. */
-  isReady?: Function;
+  ready?: Function;
   /** Readonly. Exposes any error message for debugging or as a hook for a CSS selector: */
   errMsg?: string;
   /** Readonly: Expose the current status for debugging or as a hook for a CSS selector: */

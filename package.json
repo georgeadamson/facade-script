@@ -1,6 +1,6 @@
 {
   "name": "facade-script",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "Lazyloader for any script or embed",
   "homepage":"https://github.com/georgeadamson/facade-script",
   "keywords": [
