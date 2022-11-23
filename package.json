@@ -45,6 +45,6 @@
     "@types/puppeteer": "^3.0.1",
     "jest": "^26.4.2",
     "jest-cli": "^26.4.2",
-    "puppeteer": "^5.5.0"
+    "puppeteer": "^19.3.0"
   }
 }
